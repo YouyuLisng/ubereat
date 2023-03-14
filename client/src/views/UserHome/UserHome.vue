@@ -97,6 +97,11 @@
                             </div>
                             <div class="btn border-0 position-absolute top-0 end-0 love">
                             </div>
+                            <div>
+                                <p>麥當勞 台中學士 McDonald's S32 <br>
+                                    20 TWD 費用
+                                </p>
+                            </div>
                         </div>
                         <div class="col position-relative p-0 mx-2">
                             <div class="shop-img position-relative">
@@ -110,7 +115,7 @@
                         <div class="col position-relative p-0 mx-2">
                             <div class="shop-img position-relative">
                                 <img class="img-fluid"
-                                    src="/image/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC9pbWFnZS1wcm9jL3Byb2Nlc3NlZF9pbWFnZXMvYTVmY2IzMzU5Njk5YmJkNDJjZDBiNTVkOThlMmQwYTUvYTcwZjVjOWRmNDQwZDEwMjEzZTkzMjQ0ZTllYjdjYWQuanBlZw==.webp"
+                                    src="/image/8srcb64=aHR0cHM6Ly9kMXJhbHNvZ25qbmczNy5jbG91ZGZyb250Lm5ldC9mNWMyMzE1OS0xNmU0LTRkMTItOTFlNy1lMmYxZWZjMjU5YTguanBlZw==.webp"
                                     alt="Responsive image">
                             </div>
                             <div class="btn border-0 position-absolute top-0 end-0 love">
