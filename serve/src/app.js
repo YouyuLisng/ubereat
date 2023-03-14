@@ -31,13 +31,13 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 // -----------------cors設定---------------
-app.get('/user', function (req, res) {
+app.get('/menu', function (req, res) {
     db.exec(
-        "SELECT * FROM `User`",
+        "SELECT * FROM `Menu`",
         [],
         function (result, err) {
             console.log(err)
-            return res.send(JSON.stringify(result));
+            return res.send(result);
         }
     )
 })
