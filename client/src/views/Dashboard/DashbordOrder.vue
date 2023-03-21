@@ -1,3 +1,3 @@
 <template>
-    訂單資訊
+    訂單
 </template>

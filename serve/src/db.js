@@ -10,9 +10,9 @@ exports.exec = (sql, data, callback) => {
     })
     connection.connect();
 
-    connection.query(sql, data, function (error, result, fields) {
-        if (error) {
-            console.log(error)
+    connection.query(sql, data, function (err, result, fields) {
+        if (err) {
+            console.log(err)
         };
         callback(result, fields);
     })

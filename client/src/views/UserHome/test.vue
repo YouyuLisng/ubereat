@@ -1,5 +1,4 @@
 <template>
-    {{ addModal }}
     <div class="bg-gray">
         <div class="container">
             <div class="text-end p-3">
@@ -52,7 +51,7 @@ export default defineComponent({
         addModal
     },
     setup() {
-        let ShopID = sessionStorage.getItem('Shop_ID')
+        let ShopID = 7
         let Product = ref([])
         let addModal = ref(null)
         const getProduct = function () {

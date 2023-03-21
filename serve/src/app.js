@@ -11,6 +11,7 @@ const morgan = require("morgan");
 const db = require('./db');
 const { json } = require("body-parser");
 const { data } = require("jquery");
+const { decode } = require("punycode");
 const app = express();
 app.use(morgan('combine'));
 app.use(bodyParser.json());
@@ -193,8 +194,35 @@ app.get('/shop', function (req, res) {
         return res.json({ status: 200, message: '成功', data: result[0] })
     })
 })
-
-//更新資料
+//更新店家資料
 app.put('/upadte-shop', function(req, res) {
-    const { ShopID ,Shop_Name, Shop_Description, Shop_IMGURL, Shop_delivery, Shop_Address } = req.body
+    var ShopID = req.body.ShopID
+    console.log(ShopID)
+    const { Shop_Name, Shop_Description, Shop_IMGURL, Shop_delivery, Shop_Address } = req.body
+    var sql = `UPDATE Shop SET  Shop_Name = ?, Shop_Description = ?, Shop_IMGURL = ?, Shop_delivery = ?, Shop_Address = ? WHERE ShopID = ${ShopID}`
+    db.exec(sql,[Shop_Name, Shop_Description, Shop_IMGURL, Shop_delivery, Shop_Address], function(result, fields) {
+        if (fields) {
+            return res.json({ status: 400, message: '更新失敗' })
+        }
+        return res.json({ status: 200, message: '更新成功' })
+    })
+})
+//新增商品
+app.post('/add-product', function(req, res) {
+    console.log(req.body)
+    var ShopID = req.body.ShopID;
+    const { Product_Name, Product_Price, Product_Description, Product_IMGURL } = req.body.data
+    var sql = `INSERT INTO Product SET ShopID = ?, Product_Name = ?, Product_Price = ?, Product_Description = ?, Product_IMGURL = ?;`
+    db.exec(sql, [ShopID, Product_Name, Product_Price, Product_Description, Product_IMGURL], function(result, fields) {
+        return res.json({ status: 200, message: '新增成功' })
+    })
+})
+//取得商品資料
+app.get('/get-product', function(req, res) {
+    console.log(req.body)
+    var ShopID = req.query.ShopID
+    var sql = `SELECT * FROM Product WHERE ShopID = ${ShopID}`
+    db.exec(sql,[], function(result, fields) {
+        return res.json({ status: 200, message: '成功', data: result })
+    })
 })

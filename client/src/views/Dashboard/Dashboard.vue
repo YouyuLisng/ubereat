@@ -49,12 +49,19 @@ import { useRouter } from 'vue-router'
 export default {
     setup() {
         const route = useRouter()
+        let Shop_ManagerID = null
         onMounted(() => {
             const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1')
             axios.defaults.headers.common.Authorization = token
             axios.post('http://localhost:3000/shop_check').then((res) => {
                 if (res.data.status === 200) {
                     console.log(res.data)
+                    sessionStorage.setItem('Shop_ManagerID', res.data.Shop_ManagerID)
+                    Shop_ManagerID = sessionStorage.getItem('Shop_ManagerID')
+                    axios.get(`http://localhost:3000/shop/?Shop_ManagerID=${Shop_ManagerID}`)
+                        .then((res) => {
+                            sessionStorage.setItem('Shop_ID', res.data.data.ShopID)
+                        })
                     route.push('/dashboard/shop')
                 } else {
                     console.log(res.data.message)

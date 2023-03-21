@@ -1,5 +1,4 @@
 <template>
-    {{ ShopInfo }}
     <div class="container mt-3 border rounded-3">
         <div class="row bg-gray rounded-3">
             <div class="col-4 text-center">
@@ -32,13 +31,13 @@
                         <div class="col-12">
                             <div class="mb-3">
                                 <label for="formFile" class="form-label">上傳圖片檔案</label>
-                                <input @change="uploadfile" class="form-control" name="image" type="file">
+                                <input ref="fileinput " @change="uploadfile" class="form-control" name="image" type="file">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="mb-3">
                                 <label for="formFile" class="form-label">輸入圖片網址</label>
-                                <input v-model="ShopInfo.Shop_IMGURL" class="form-control">
+                                <input @change="uploadfile" v-model="ShopInfo.Shop_IMGURL" class="form-control">
                             </div>
                         </div>
                         <div class="col-12">
@@ -48,8 +47,8 @@
                             </div>
                         </div>
                         <div class="col-12 text-end">
-                            <div @click="onFileChange" class="btn btn-primary">
-                                Save
+                            <div @click="updateShop" class="btn btn-primary">
+                                送出
                             </div>
                         </div>
                     </div>
@@ -87,7 +86,8 @@ import { useRouter } from 'vue-router';
 export default {
     setup() {
         const route = useRouter()
-        let Shop_ManagerID = null
+        let Shop_ManagerID = sessionStorage.getItem('Shop_ManagerID')
+        let ShopID = sessionStorage.getItem('Shop_ID')
         let ShopInfo = ref({
             ShopID: '',
             Shop_Name: '',
@@ -97,18 +97,9 @@ export default {
             Shop_delivery: ''
         })
         onMounted(() => {
-            const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1')
-            axios.defaults.headers.common.Authorization = token
-            axios.get('http://localhost:3000/api/shop_user').then((res) => {
-                if (res.data.status === 200) {
-                    Shop_ManagerID = res.data.Shop_ManagerID
-                    get_ShopUser()
-                } else {
-                    route.push('/shop_login')
-                }
-            })
+            get_ShopUser()
         })
-        //取Shop UserID 並且取得Shop資料
+        //取商店管理員ID並且取得商店資料
         const get_ShopUser = function () {
             axios.get(`http://localhost:3000/shop/?Shop_ManagerID=${Shop_ManagerID}`)
                 .then((res) => {
@@ -121,10 +112,10 @@ export default {
         const uploadfile = function (e) {
             const file = e.target.files[0]
             uploadIMG = e.target.files[0]
-            console.log('ok', uploadIMG)
             const reader = new FileReader()
             reader.addEventListener('load', imageLoaded)
             reader.readAsDataURL(file)
+            onFileChange()
         }
         const imageLoaded = function (e) {
             ShopInfo.value.Shop_IMGURL = e.target.result
@@ -132,19 +123,26 @@ export default {
         const onFileChange = function () {
             const formData = new FormData();
             formData.append('image', uploadIMG);
-            axios.post('http://localhost:3000/api/upload-image', formData,'123', {
+            axios.post('http://localhost:3000/api/upload-image', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             })
                 .then(response => {
-                    console.log(response.data);
                     ShopInfo.value.Shop_IMGURL = response.data.IMG_Path
-                    console.log(ShopInfo)
                 });
+        }
+        const updateShop = function () {
+            axios.put('http://localhost:3000/upadte-shop', ShopInfo.value).then((res) => {
+                if(res.data.status === 200) {
+                    console.log(res)
+                    get_ShopUser()
+                }
+            })
         }
         return {
             ShopInfo,
             uploadfile,
             onFileChange,
+            updateShop
         }
     }
 }

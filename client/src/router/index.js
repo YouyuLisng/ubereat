@@ -37,6 +37,13 @@ const routes = [
     }
   },
   {
+    path: '/test',
+    component: () => import('../views/UserHome/test.vue'),
+    meta: {
+      title: '測試'
+    }
+  },
+  {
     path: '/dashboard',
     component: () => import('../views/Dashboard/Dashboard.vue'),
     meta: {

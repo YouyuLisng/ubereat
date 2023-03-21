@@ -45,11 +45,13 @@ CREATE TABLE `Product` (
   `ProductID` INT PRIMARY KEY AUTO_INCREMENT COMMENT '產品ID',
   `ShopID` INT COMMENT '商店ID FK',
   `Product_Name` VARCHAR(255) COMMENT '產品名稱',
+  `Prodcut_Type` VARCHAR(255) COMMENT '產品型別',
   `Product_Price` VARCHAR(255) COMMENT '產品價格',
   `Product_Description` VARCHAR(255) COMMENT '產品描述',
   `Product_IMGURL` VARCHAR(50) COMMENT '圖片路徑',
   FOREIGN KEY(`ShopID`) REFERENCES `Shop`(`ShopID`) ON DELETE SET NULL
 );
+INSERT INTO `Product` (`ProductID`, `ShopID`, `Product_Name`, `Product_Price`, `Product_Description`, `Product_IMGURL`) VALUES (NULL, '5', '勁辣雞腿堡套餐', '165', '套餐含勁辣鷄腿堡一份 (中辣)、配餐選擇與 NT$38 飲料選擇。', '');
 前台icon
 CREATE TABLE `Menu` (
   `MenuID` INT PRIMARY KEY AUTO_INCREMENT COMMENT 'ID',
