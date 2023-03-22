@@ -217,6 +217,19 @@ app.post('/add-product', function(req, res) {
         return res.json({ status: 200, message: '新增成功' })
     })
 })
+//更新商品資料
+app.put('/upadte-product', function(req, res) {
+    var ProductID = req.body.data.ProductID
+    console.log(req.body)
+    const { Product_Name, Product_Price, Product_Description, Product_IMGURL } = req.body.data
+    var sql = `UPDATE Product SET  Product_Name = ?, Product_Description = ?, Product_Price = ?, Product_IMGURL = ? WHERE ProductID = ${ProductID}`
+    db.exec(sql,[ Product_Name, Product_Description, Product_Price,  Product_IMGURL ], function( err, result, fields) {
+        if (err) {
+            return res.json({ status: 400, message: '更新失敗' })
+        }
+        return res.json({ status: 200, message: '更新成功' })
+    })
+})
 //取得商品資料
 app.get('/get-product', function(req, res) {
     console.log(req.body)

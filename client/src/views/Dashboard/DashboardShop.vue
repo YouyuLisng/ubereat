@@ -48,7 +48,7 @@
                         </div>
                         <div class="col-12 text-end">
                             <div @click="updateShop" class="btn btn-primary">
-                                送出
+                                儲存
                             </div>
                         </div>
                     </div>

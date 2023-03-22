@@ -11,7 +11,7 @@
                         <div class="col-6">
                             <label for="exampleFormControlInput1" class="form-label">商品名稱</label>
                             <input type="text" class="form-control" id="exampleFormControlInput1"
-                                v-model="tempProduct.Product_Name" placeholder="輸入商店名稱">
+                                v-model="tempProduct.Product_Name" placeholder="輸入商品名稱">
                         </div>
                         <div class="w-100"></div>
                         <div class="col-12">
@@ -55,10 +55,10 @@
 
 <script>
 import Modal from 'bootstrap/js/dist/modal'
-import { onMounted, ref, props, watchEffect } from 'vue';
+import { onMounted, ref, props, watch } from 'vue';
 import axios from 'axios';
 export default {
-    emits: ['updateProduct'],
+    emits: ['update-product'],
     props: {
         product: {
             type: Object,
@@ -66,23 +66,24 @@ export default {
         }
     },
     setup(props) {
-        const tempProduct = ref({})
+        const tempProduct = ref(props.product)
         const modal = ref(null)
+        const model = ref(null)
 
-        watchEffect(() => {
-            tempProduct.value = props.product
-        });
+        watch(() => props.product, (newVal) => {
+            tempProduct.value = newVal
+        })
 
         const showModal = function () {
-            modal.value.show()
+            model.value.show()
         }
 
-        const hideModal = function() {
-            modal.value.hide()
+        const hideModal = function () {
+            model.value.hide()
         }
 
         onMounted(() => {
-            modal.value = new Modal(modal.value)
+            model.value = new Modal(modal.value)
         })
         let uploadIMG = null
         // 抓取上傳檔案的值
@@ -113,6 +114,7 @@ export default {
             props,
             tempProduct,
             modal,
+            model,
             uploadIMG,
             uploadfile,
             imageLoaded,

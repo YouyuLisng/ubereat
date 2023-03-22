@@ -66,7 +66,6 @@ export default defineComponent({
         var tempProduct = ref({})
         const open_addModel = function (New, item) {
             tempProduct.value = { ...item }
-            console.log(addModal)
             isNew.value = New
             this.$refs.addModal.showModal()
         }
