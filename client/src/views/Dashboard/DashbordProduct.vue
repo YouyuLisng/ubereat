@@ -1,5 +1,4 @@
 <template>
-    {{ addModal }}
     <div class="bg-gray">
         <div class="container">
             <div class="text-end p-3">
@@ -10,7 +9,7 @@
                     <div class="col">
                         <div class="card">
                             <img :src="item.Product_IMGURL" class="card-img-top" alt="...">
-                            <div class="card-body" style="height: 112px;">
+                            <div class="card-body" style="height: 150px;">
                                 <h5 class="card-title">{{ item.Product_Name }}</h5>
                                 <p class="card-text">{{ item.Product_Description }}</p>
                             </div>

@@ -5,13 +5,13 @@
                 <button @click="open_addModel(true)" type="button" class="btn btn-primary">新增商品</button>
             </div>
             <div class="row p-3 gx-3">
-                <div class="col-3" v-for="item in Product" :key="item.ProductID">
+                <div class="col-3">
                     <div class="col">
                         <div class="card">
-                            <img :src="item.Product_IMGURL" class="card-img-top" alt="...">
+                            <img src="https://fakeimg.pl/250x100/ff0000/" class="card-img-top" alt="...">
                             <div class="card-body" style="height: 112px;">
-                                <h5 class="card-title">{{ item.Product_Name }}</h5>
-                                <p class="card-text">{{ item.Product_Description }}</p>
+                                <h5 class="card-title">title</h5>
+                                <p class="card-text">Product_Description</p>
                             </div>
                             <div class="row">
                                 <div class="col border text-center">
@@ -66,6 +66,7 @@ export default defineComponent({
         var tempProduct = ref({})
         const open_addModel = function (New, item) {
             tempProduct.value = { ...item }
+            console.log(addModal)
             isNew.value = New
             this.$refs.addModal.showModal()
         }

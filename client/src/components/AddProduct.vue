@@ -55,9 +55,10 @@
 
 <script>
 import Modal from 'bootstrap/js/dist/modal'
-import { onMounted, ref, props, watchEffect } from "vue";
+import { onMounted, ref, props, watchEffect } from 'vue';
 import axios from 'axios';
 export default {
+    emits: ['updateProduct'],
     props: {
         product: {
             type: Object,
