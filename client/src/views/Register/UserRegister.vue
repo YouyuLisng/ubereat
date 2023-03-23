@@ -105,10 +105,13 @@ export default {
     const route = useRouter()
     const api = 'http://localhost:3000/UserRegister'
     let register = function() {
-      axios.post(api, User.value).then((res) => {
-        console.log(res)
+      axios.post(api, User).then((res) => {
+        console.log(res.data)
         if (res.data.status === 200) {
           route.push('/user_login')
+        } else {
+          alert(res.data.message)
+          window.location.reload()
         }
       })
     }

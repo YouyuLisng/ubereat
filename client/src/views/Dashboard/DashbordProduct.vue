@@ -1,10 +1,40 @@
-<template class="bg-gray">
-    <div class="bg-gray">
+<template>
+    <div>
         <div class="container">
             <div class="text-end p-3">
                 <button @click="open_addModel(true, {})" type="button" class="btn btn-primary">新增商品</button>
             </div>
-            <div class="row p-3 gx-3 gy-3">
+            <table class="table mt-4">
+                <thead>
+                    <tr>
+                        <th>分類</th>
+                        <th>產品名稱</th>
+                        <th>售價</th>
+                        <th>是否啟用</th>
+                        <th class="text-center">編輯</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in Product" :key="item.ProductID">
+                        <td>{{ item.Product_Type }}</td>
+                        <td>{{ item.Product_Name }}</td>
+                        <td>
+                            {{ item.Product_Price }}
+                        </td>
+                        <td>
+                            <span class="text-success" v-if="item.is_enabled">啟用</span>
+                            <span class="text-muted" v-else>未啟用</span>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <button class="btn btn-outline-primary btn-sm" @click="open_addModel(false, item)">編輯</button>
+                                <button class="btn btn-outline-danger btn-sm" @click="openDelProductModal(item)">刪除</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <div class="row p-3 gx-3 gy-3">
                 <div class="col-3" v-for="item in Product" :key="item.ProductID">
                     <div class="col">
                         <div class="card">
@@ -12,7 +42,7 @@
                                 <img :src="item.Product_IMGURL" class="card-img-top" alt="...">
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title text-center fs-5">{{ item.Product_Name }}</h5>
+                                <h5 class="card-title text-center">{{ item.Product_Name }}</h5>
                             </div>
                             <div class="row">
                                 <div class="col border text-center">
@@ -25,7 +55,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     <addModal ref="addModal" :product="tempProduct" @update-product="updateProduct"></addModal>
@@ -34,6 +64,7 @@
 .card-body h5 {
     font-size: 16px;
 }
+
 .bg-gray {
     background-color: #E5E6E4;
 }
@@ -71,6 +102,7 @@ export default defineComponent({
         const open_addModel = function (New, item) {
             if (New) {
                 tempProduct.value = item
+                tempProduct.value.Product_Type = '請選擇'
                 console.log('New')
             } else {
                 tempProduct.value = { ...item }

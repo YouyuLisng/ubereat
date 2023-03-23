@@ -65,7 +65,7 @@ export default {
                     const token = res.data.token
                     const expires = new Date(Date.now() + 60 * 10).toUTCString() // 10 分鐘後的 UTC 時間字串
                     document.cookie = `token=${token};expires=${new Date(expires)};`
-                    route.push('/dashboard/shop')
+                    route.push('/dashboard')
                 }
             })
         }

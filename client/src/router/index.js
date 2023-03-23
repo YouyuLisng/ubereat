@@ -9,6 +9,13 @@ const routes = [
     }
   },
   {
+    path: '/user_edit',
+    component: () => import('../views/Edit/Edit.vue'),
+    meta: {
+      title: '基本資料'
+    }
+  },
+  {
     path: '/user_register',
     component: () => import('../views/Register/UserRegister.vue'),
     meta: {

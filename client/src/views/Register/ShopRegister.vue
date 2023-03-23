@@ -122,7 +122,7 @@ export default {
             Shop_ManagerID: data.Shop_ManagerID,
             Shop_Name: '',
             Shop_Address: '',
-            Shop_Type: ''
+            Shop_Type: '請選擇'
         }
         let restaurant = function() {
             console.log(Shop)

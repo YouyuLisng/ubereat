@@ -1,22 +1,33 @@
 <template>
     <div class="container mt-3 border rounded-3">
         <div class="row bg-gray rounded-3">
-            <div class="col-4 text-center">
+            <div class="col-lg-4 col d-none d-lg-block text-center">
                 <h1 class="fs-5 p-3">設定前台資訊</h1>
             </div>
-            <div class="col-8">
+            <div class="col-lg-8 col-12">
                 <div class="bg-white rounded-3">
                     <div class="row m-3 p-3 gy-3">
-                        <div class="col-6">
+                        <h1 class="fs-5 p-3 d-lg-none d-block text-center">設定前台資訊</h1>
+                        <div class="col-lg-6 col-12">
                             <label for="exampleFormControlInput1" class="form-label">商店名稱</label>
                             <input type="text" class="form-control" id="exampleFormControlInput1"
                                 v-model="ShopInfo.Shop_Name" placeholder="輸入商店名稱">
+                        </div>
+                        <div class="col-lg-6 col-12">
+                            <label for="exampleFormControlInput1" class="form-label">外送費</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput1"
+                                v-model="ShopInfo.Shop_delivery" placeholder="外送費">
                         </div>
                         <div class="w-100"></div>
                         <div class="col-12">
                             <label for="exampleFormControlInput2" class="form-label">商店描述</label>
                             <input type="" class="form-control" id="exampleFormControlInput2" placeholder="商店敘述"
                                 v-model="ShopInfo.Shop_Description">
+                        </div>
+                        <div class="col-12">
+                            <label for="exampleFormControlInput2" class="form-label">商店地址</label>
+                            <input type="" class="form-control" id="exampleFormControlInput2" placeholder="商店地址"
+                                v-model="ShopInfo.Shop_Address">
                         </div>
                         <div class="col-12">
                             <label class="form-label">業務類型</label>
@@ -58,7 +69,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
 .bg-gray {
     background-color: #E5E6E4;
 }

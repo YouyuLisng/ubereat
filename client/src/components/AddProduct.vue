@@ -3,7 +3,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">新增產品</h5>
+                    <h5 class="modal-title">商品編輯or新增</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -13,12 +13,33 @@
                             <input type="text" class="form-control" id="exampleFormControlInput1"
                                 v-model="tempProduct.Product_Name" placeholder="輸入商品名稱">
                         </div>
+                        <div class="col-6">
+                            <label class="form-label">商品類型</label>
+                            <select class="form-select" aria-label="Default select example"
+                                v-model="tempProduct.Product_Type">
+                                <option selected>請選擇</option>
+                                <option value="套餐">套餐</option>
+                                <option value="單點">單點</option>
+                                <option value="飲料">飲料</option>
+                                <option value="冰淇淋">冰淇淋</option>
+                            </select>
+                        </div>
                         <div class="w-100"></div>
-                        <div class="col-12">
+                        <div class="col-6">
                             <label for="exampleFormControlInput2" class="form-label">商品價格</label>
                             <input type="text" class="form-control" id="exampleFormControlInput2"
                                 v-model="tempProduct.Product_Price" placeholder="商品價格">
                         </div>
+                        <div class="col-6 d-flex align-items-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" v-model="tempProduct.is_enabled"
+                                    :true-value="1" :false-value="0" id="is_enabled" />
+                                <label class="form-check-label" for="is_enabled">
+                                    是否啟用
+                                </label>
+                            </div>
+                        </div>
+                        <div class="w-100"></div>
                         <div class="col-12">
                             <label for="exampleFormControlInput2" class="form-label">商品描述</label>
                             <input type="text" class="form-control" id="exampleFormControlInput2"

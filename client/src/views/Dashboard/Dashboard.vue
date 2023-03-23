@@ -20,10 +20,8 @@
                     <li class="nav-item">
                         <router-link class="nav-link" to="/dashboard/discount">優惠卷</router-link>
                     </li>
-                    <li class="nav-item">
-                        <router-link class="nav-link" to="/dashboard/discount">
-                            <img class="icon img-fluid" src="../../image/bell.svg" alt="">
-                        </router-link>
+                    <li class="nav-item" @click="logout">
+                        <router-link class="nav-link" to="/shop_login">登出</router-link>
                     </li>
                     <li class="nav-item">
                         <router-link class="nav-link" to="/dashboard/discount">
@@ -36,7 +34,7 @@
     </nav>
     <RouterView></RouterView>
 </template>
-<style>
+<style scoped>
 .icon {
     width: 30px;
     height: 30px;
@@ -69,6 +67,14 @@ export default {
                 }
             })
         })
+        const logout = function () {
+            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            sessionStorage.clear()
+            route.push('/shop_login')
+        }
+        return {
+            logout
+        }
     }
 }
 </script>

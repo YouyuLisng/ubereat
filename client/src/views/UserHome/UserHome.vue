@@ -9,88 +9,106 @@
                 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasRight"
                     aria-labelledby="offcanvasRightLabel">
                     <div class="offcanvas-body">
-                        <div class="d-flex mt-3" style="width: 170px;">
-                            <div>
-                                <img width="50px" height="50px" class="img-fluid" src="../../image/64572.png" alt="">
+                        <div v-if="isLogin">
+                            <div class="d-flex mt-3" style="width: 170px;">
+                                <div>
+                                    <img style="width: 50px;" class="img-fluid" src="../../image/64572.png" alt="">
+                                </div>
+                                <div class="ps-3">
+                                    <p>{{ UserData.User_Name }}</p>
+                                    <router-link class="check-account" to="/user_edit">檢視帳戶資訊</router-link>
+                                </div>
                             </div>
-                            <div class="ps-3">
-                                <p>梁</p>
-                                <a href="#" class="check-account">檢視帳戶資訊</a>
+                            <div class="row mt-5 gy-4">
+                                <div class="col-12">
+                                    <div class="d-flex justify-content-between align-items-center" style="width: 120px;">
+                                        <div>
+                                            <img class="icon img-fluid" src="../../image/file-text.svg" alt="">
+                                        </div>
+                                        <div>
+                                            <p class="fw-bold">近期訂單</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-flex justify-content-between align-items-center" style="width: 120px;">
+                                        <div>
+                                            <img class="icon img-fluid" src="../../image/suit-heart.svg" alt="">
+                                        </div>
+                                        <div>
+                                            <p class="fw-bold">最愛餐廳</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-flex justify-content-between align-items-center" style="width: 120px;">
+                                        <div>
+                                            <img class="icon img-fluid" src="../../image/wallet2.svg" alt="">
+                                        </div>
+                                        <div>
+                                            <p class="fw-bold">我的錢包</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button @click="logout" type="button" class="btn btn-light">登出</button>
+                                </div>
+                                <hr>
+                                <div class="col-12">
+                                    <router-link class="btn btn-secondary w-100" to="/shop_register">新增您的餐廳</router-link>
+                                </div>
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-secondary w-100">建立企業帳戶</button>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div style="width: 100px;">
+                                            <div type="button"
+                                                class="btn btn-light d-flex justify-content-center align-items-center">
+                                                <div class="d-flex justify-content-center align-items-center">
+                                                    <img class="img-fluid" src="../../image/apple.svg" alt="">
+                                                </div>
+                                                <div>
+                                                    Apple
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="width: 100px;">
+                                            <div type="button"
+                                                class="btn btn-light d-flex justify-content-center align-items-center">
+                                                <div class="d-flex justify-content-center align-items-center">
+                                                    <img class="img-fluid" src="../../image/android2.svg" alt="">
+                                                </div>
+                                                <div>
+                                                    Android
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="row mt-5 gy-4">
-                            <div class="col-12">
-                                <div class="d-flex justify-content-between align-items-center" style="width: 120px;">
-                                    <div>
-                                        <img class="icon img-fluid" src="../../image/file-text.svg" alt="">
-                                    </div>
-                                    <div>
-                                        <p class="fw-bold">近期訂單</p>
-                                    </div>
+                        <div v-else>
+                            <div class="row gy-3">
+                                <div class="col-12">
+                                    <router-link class="btn btn-dark w-100" to="/user_register">註冊</router-link>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="d-flex justify-content-between align-items-center" style="width: 120px;">
-                                    <div>
-                                        <img class="icon img-fluid" src="../../image/suit-heart.svg" alt="">
-                                    </div>
-                                    <div>
-                                        <p class="fw-bold">最愛餐廳</p>
-                                    </div>
+                                <div class="col-12">
+                                    <router-link class="btn btn-secondary w-100" to="/user_login">登入</router-link>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="d-flex justify-content-between align-items-center" style="width: 120px;">
-                                    <div>
-                                        <img class="icon img-fluid" src="../../image/wallet2.svg" alt="">
-                                    </div>
-                                    <div>
-                                        <p class="fw-bold">我的錢包</p>
-                                    </div>
+                                <div class="col-12">
+                                    <router-link class="btn btn-secondary w-100" to="/shop_register">新增您的餐廳</router-link>
                                 </div>
-                            </div>
-                            <div class="col-12 text-end">
-                                <button type="button" class="btn btn-light">登出</button>
-                            </div>
-                            <hr>
-                            <div class="col-12">
-                                <button type="button" class="btn btn-light">新增您的餐廳</button>
-                            </div>
-                            <div class="col-12">
-                                <button type="button" class="btn btn-light">建立企業帳戶</button>
-                            </div>
-                            <div class="col-12">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div style="width: 100px;">
-                                        <div type="button"
-                                            class="btn btn-light d-flex justify-content-center align-items-center">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <img class="img-fluid" src="../../image/apple.svg" alt="">
-                                            </div>
-                                            <div>
-                                                Apple
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div style="width: 100px;">
-                                        <div type="button"
-                                            class="btn btn-light d-flex justify-content-center align-items-center">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <img class="img-fluid" src="../../image/android2.svg" alt="">
-                                            </div>
-                                            <div>
-                                                Android
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-light w-100">建立企業帳戶</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2 col-6 img-fuild d-flex justify-content-center align-items-center">
-                <img src="../../image/logo_kitahora.svg" alt="">
+            <div class="col-lg-2 col-4 img-fuild d-flex justify-content-center align-items-center">
+                <img class="img-fuild" src="../../image/logo_kitahora.svg" alt="">
             </div>
             <div class="col-lg-1 d-none d-lg-block"></div>
             <div class="col-lg-6 order-last order-lg-1">
@@ -105,21 +123,30 @@
                     <input class="form-control border-0" type="search" placeholder="美食 餐廳 飲料" aria-label="Search">
                 </form>
             </div>
-            <div class="col-lg-2 col-3 order-lg-3 order-3">
-                <button type="button" class="shop_car btn btn-dark float-end rounded-pill">
+            <div class="col-lg-2 col-5 order-lg-3 order-3">
+                <button type="button" class="shop_car btn btn-dark float-end rounded-pill" v-if="isLogin">
                     <div class="row align-items-center">
                         <div class="col-lg-4">
-                            <img class="img-fluid icon" src="../../image/649931-01.svg" alt="">
-                        </div>
-                        <div class="col-lg-8">
-                            <p class="d-none d-lg-block">購物車</p>
-                        </div>
+                                <img class="img-fluid icon" src="../../image/649931-01.svg" alt="">
+                            </div>
+                            <div class="col-lg-8">
+                                <p class="d-none d-lg-block">購物車</p>
+                            </div>
                     </div>
                 </button>
+                <div class="row" v-else>
+                    <div class="col-6">
+                        <router-link class="btn btn-dark w-100" to="/user_register">註冊</router-link>
+                    </div>
+                    <div class="col-6">
+                        <router-link class="btn btn-dark w-100" to="/user_login">登入</router-link>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="mt-3 mt-lg-5">
             <Menu></Menu>
+            <hr>
         </div>
         <div class="mt-5">
             <Carousel></Carousel>
@@ -162,123 +189,15 @@
                 </div>
                 <div class="col-lg-9 col-md-9 col-12">
                     <div class="row gy-2 gx-2">
-                        <div class="col-lg-4 col-md-12 position-relative">
+                        <div class="col-lg-3 col-md-12 position-relative" v-for="item in ShopData" :key="item.ShopID">
                             <div class="shop-img position-relative">
-                                <img class="img-fluid"
-                                    src="/image/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC9pbWFnZS1wcm9jL3Byb2Nlc3NlZF9pbWFnZXMvYTVmY2IzMzU5Njk5YmJkNDJjZDBiNTVkOThlMmQwYTUvYTcwZjVjOWRmNDQwZDEwMjEzZTkzMjQ0ZTllYjdjYWQuanBlZw==.webp"
-                                    alt="Responsive image">
+                                <img class="img-fluid" :src="item.Shop_IMGURL" alt="Responsive image">
                             </div>
                             <div class="btn border-0 position-absolute top-0 end-0 love">
                             </div>
                             <div class="mt-3">
-                                <p>麥當勞 台中學士 McDonald's S32 <br>
-                                    20 TWD 費用
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-12 position-relative">
-                            <div class="shop-img position-relative">
-                                <img class="img-fluid" src="/image/suisi.jpg" alt="Responsive image">
-                            </div>
-                            <div class="btn border-0 position-absolute top-0 end-0 love">
-                            </div>
-                            <div class="mt-3">
-                                <p>爭鮮壽司 台中中友 <br>
-                                    20 TWD 費用
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-12 position-relative">
-                            <div class="shop-img position-relative">
-                                <img class="img-fluid"
-                                    src="/image/8srcb64=aHR0cHM6Ly9kMXJhbHNvZ25qbmczNy5jbG91ZGZyb250Lm5ldC9mNWMyMzE1OS0xNmU0LTRkMTItOTFlNy1lMmYxZWZjMjU5YTguanBlZw==.webp"
-                                    alt="Responsive image">
-                            </div>
-                            <div class="btn border-0 position-absolute top-0 end-0 love">
-                            </div>
-                            <div class="mt-3">
-                                <p>友品 溫州大餛鈍 <br>
-                                    25 TWD 費用
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-12 position-relative">
-                            <div class="shop-img position-relative">
-                                <img class="img-fluid"
-                                    src="/image/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC9pbWFnZS1wcm9jL3Byb2Nlc3NlZF9pbWFnZXMvYTVmY2IzMzU5Njk5YmJkNDJjZDBiNTVkOThlMmQwYTUvYTcwZjVjOWRmNDQwZDEwMjEzZTkzMjQ0ZTllYjdjYWQuanBlZw==.webp"
-                                    alt="Responsive image">
-                            </div>
-                            <div class="btn border-0 position-absolute top-0 end-0 love">
-                            </div>
-                            <div class="mt-3">
-                                <p>麥當勞 台中學士 McDonald's S32 <br>
-                                    20 TWD 費用
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-12 position-relative">
-                            <div class="shop-img position-relative">
-                                <img class="img-fluid" src="/image/suisi.jpg" alt="Responsive image">
-                            </div>
-                            <div class="btn border-0 position-absolute top-0 end-0 love">
-                            </div>
-                            <div class="mt-3">
-                                <p>爭鮮壽司 台中中友 <br>
-                                    20 TWD 費用
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-12 position-relative">
-                            <div class="shop-img position-relative">
-                                <img class="img-fluid"
-                                    src="/image/8srcb64=aHR0cHM6Ly9kMXJhbHNvZ25qbmczNy5jbG91ZGZyb250Lm5ldC9mNWMyMzE1OS0xNmU0LTRkMTItOTFlNy1lMmYxZWZjMjU5YTguanBlZw==.webp"
-                                    alt="Responsive image">
-                            </div>
-                            <div class="btn border-0 position-absolute top-0 end-0 love">
-                            </div>
-                            <div class="mt-3">
-                                <p>友品 溫州大餛鈍 <br>
-                                    25 TWD 費用
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-12 position-relative">
-                            <div class="shop-img position-relative">
-                                <img class="img-fluid"
-                                    src="/image/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC9pbWFnZS1wcm9jL3Byb2Nlc3NlZF9pbWFnZXMvYTVmY2IzMzU5Njk5YmJkNDJjZDBiNTVkOThlMmQwYTUvYTcwZjVjOWRmNDQwZDEwMjEzZTkzMjQ0ZTllYjdjYWQuanBlZw==.webp"
-                                    alt="Responsive image">
-                            </div>
-                            <div class="btn border-0 position-absolute top-0 end-0 love">
-                            </div>
-                            <div class="mt-3">
-                                <p>麥當勞 台中學士 McDonald's S32 <br>
-                                    20 TWD 費用
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-12 position-relative">
-                            <div class="shop-img position-relative">
-                                <img class="img-fluid" src="/image/suisi.jpg" alt="Responsive image">
-                            </div>
-                            <div class="btn border-0 position-absolute top-0 end-0 love">
-                            </div>
-                            <div class="mt-3">
-                                <p>爭鮮壽司 台中中友 <br>
-                                    20 TWD 費用
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-12 position-relative">
-                            <div class="shop-img position-relative">
-                                <img class="img-fluid"
-                                    src="/image/8srcb64=aHR0cHM6Ly9kMXJhbHNvZ25qbmczNy5jbG91ZGZyb250Lm5ldC9mNWMyMzE1OS0xNmU0LTRkMTItOTFlNy1lMmYxZWZjMjU5YTguanBlZw==.webp"
-                                    alt="Responsive image">
-                            </div>
-                            <div class="btn border-0 position-absolute top-0 end-0 love">
-                            </div>
-                            <div class="mt-3">
-                                <p>友品 溫州大餛鈍 <br>
-                                    25 TWD 費用
+                                <p>{{ item.Shop_Name }}<br>
+                                    {{ item.Shop_delivery }} TWD 費用
                                 </p>
                             </div>
                         </div>
@@ -292,7 +211,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
 p {
     margin-bottom: 0;
 }
@@ -331,7 +250,6 @@ p {
 
 .shop-img img {
     position: absolute;
-    top: -30%;
 }
 
 @media(max-width: 960px) {
@@ -339,11 +257,13 @@ p {
         top: -70%;
     }
 }
+
 @media(max-width: 575px) {
     .shop-img img {
         top: -45%;
     }
 }
+
 .love {
     background-image: url(../../image/suit-heart.svg);
     background-position: center center;
@@ -368,15 +288,59 @@ p {
 </style>
 
 <script>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import Menu from './ProductMenu.vue'
+import axios from 'axios';
 import Carousel from './CarouselSwiper.vue';
 export default {
     setup() {
+        const route = useRouter()
+        const ShopData = ref([])
+        const UserData = ref({
+            User_Name: ''
+        })
+        const isLogin = ref(false)
+        const UserID = sessionStorage.getItem('UserID')
+        const get_allshop = function () {
+            axios.get('http://localhost:3000/all-shop')
+                .then((res) => {
+                    console.log(res)
+                    ShopData.value = res.data.data
+                })
+        }
+        const get_user = function () {
+            console.log(UserID)
+            axios.get(`http://localhost:3000/User?UserID=${UserID}`)
+                .then((res) => {
+                    if (res.data.status === 200) {
+                        console.log(res.data)
+                        UserData.value = res.data.data
+                        isLogin.value = true
+                    } else {
+                        isLogin.value = false
+                    }
+                })
+        }
+        const logout = function () {
+            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            sessionStorage.clear()
+            route.push('/user_login')
+        }
+        onMounted(() => {
+            get_allshop()
+            get_user()
+        })
+        return {
+            ShopData,
+            UserData,
+            logout,
+            isLogin
+        }
     },
     components: {
         Menu,
-        Carousel
+        Carousel,
     }
 }
 </script>

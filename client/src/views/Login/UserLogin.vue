@@ -63,7 +63,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 .main {
   max-width: 360px;
   margin: 0 auto;
@@ -81,16 +81,20 @@ import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 export default {
-  setup () {
+  setup() {
     let User = {
       User_Account: '',
       User_Password: '',
     }
     const route = useRouter()
     const api = 'http://localhost:3000/user_login'
-    let login = function() {
+    let login = function () {
       axios.post(api, User).then((res) => {
         if (res.data.status === 200) {
+          console.log(res.data)
+          const token = res.data.token
+          document.cookie = `token=${token};`
+          sessionStorage.setItem('UserID', res.data.UserID)
           route.push('/')
         }
       })
