@@ -27,8 +27,9 @@
                         </td>
                         <td class="text-center">
                             <div class="btn-group">
-                                <button class="btn btn-outline-primary btn-sm" @click="open_addModel(false, item)">編輯</button>
-                                <button class="btn btn-outline-danger btn-sm" @click="openDelProductModal(item)">刪除</button>
+                                <button class="btn btn-outline-primary btn-sm"
+                                    @click="open_addModel(false, item)">編輯</button>
+                                <button class="btn btn-outline-danger btn-sm" @click="opendelModal(item)">刪除</button>
                             </div>
                         </td>
                     </tr>
@@ -59,6 +60,7 @@
         </div>
     </div>
     <addModal ref="addModal" :product="tempProduct" @update-product="updateProduct"></addModal>
+    <delModel ref="delModal" :product="tempProduct" @del-Product="delProduct"></delModel>
 </template>
 <style>
 .card-body h5 {
@@ -79,18 +81,25 @@
 import { ref, onMounted } from 'vue'
 import { defineComponent } from 'vue'
 import addModal from '@/components/AddProduct.vue'
+import delModel from '@/components/DelModel.vue'
 import axios from 'axios'
 
 export default defineComponent({
     components: {
-        addModal
+        addModal,
+        delModel
     },
     setup() {
         let ShopID = sessionStorage.getItem('Shop_ID')
         let Product = ref([])
         let addModal = ref(null)
+        let delModal = ref(null)
+        const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1')
+        if (!token) {
+            router.push('/shop_login') // 未登入，導回登入頁面
+        }
         const getProduct = function () {
-            axios.get(`http://localhost:3000/get-product?ShopID=${ShopID}`).then((res) => {
+            axios.get(`http://localhost:3000/get-all-product?ShopID=${ShopID}`).then((res) => {
                 console.log(res)
                 Product.value = res.data.data
             })
@@ -103,13 +112,15 @@ export default defineComponent({
             if (New) {
                 tempProduct.value = item
                 tempProduct.value.Product_Type = '請選擇'
-                console.log('New')
             } else {
                 tempProduct.value = { ...item }
-                console.log('Old')
             }
             isNew.value = New
             this.$refs.addModal.showModal()
+        }
+        const opendelModal = function (item) {
+            tempProduct.value = { ...item }
+            this.$refs.delModal.showModal()
         }
         //判斷是否為新增或編輯 updateProduct = 新增or編輯
         let isNew = ref(true)
@@ -133,13 +144,25 @@ export default defineComponent({
             }
             addModal.value.hideModal()
         }
+        const delProduct = function (item) {
+            var ProductID = item.ProductID
+            axios.delete(`http://localhost:3000/del-product?ProductID=${ProductID}`)
+                .then((res) => {
+                    console.log(res)
+                    delModal.value.hideModal()
+                    getProduct()
+                })
+        }
         return {
             Product,
             tempProduct,
             addModal,
+            delModal,
             open_addModel,
+            opendelModal,
             isNew,
-            updateProduct
+            updateProduct,
+            delProduct
 
         }
     }

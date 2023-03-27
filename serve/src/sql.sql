@@ -58,3 +58,8 @@ CREATE TABLE `Menu` (
   `IMGURL` INT COMMENT '圖片路徑',
   `title` VARCHAR(255) UNIQUE COMMENT '名稱',
 );
+CREATE TABLE `Product_Type` (
+  `ID` INT PRIMARY KEY AUTO_INCREMENT COMMENT 'ID',
+  `ShopID` INT COMMENT '店家ID',
+  `Type` VARCHAR(255) COMMENT '商品型別',
+);

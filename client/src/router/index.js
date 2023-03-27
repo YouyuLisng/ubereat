@@ -6,7 +6,30 @@ const routes = [
     component: () => import('../views/UserHome/UserHome.vue'),
     meta: {
       title: '下一餐'
-    }
+    },
+    children: [
+      {
+        path: 'feed',
+        component: () => import('../views/UserHome/Store.vue'),
+        meta: {
+          title: '線上訂購餐點！'
+        }
+      },
+      {
+        path: 'store/:id',
+        component: () => import('../views/UserHome/Shop.vue'),
+        meta: {
+          title: '商店'
+        }
+      },
+      {
+        path: 'product/:id',
+        component: () => import('../views/UserHome/Product.vue'),
+        meta: {
+          title: '商品資訊'
+        }
+      }
+    ]
   },
   {
     path: '/user_edit',
@@ -41,13 +64,6 @@ const routes = [
     component: () => import('../views/Login/ShopLogin.vue'),
     meta: {
       title: '管理員登入'
-    }
-  },
-  {
-    path: '/test',
-    component: () => import('../views/UserHome/test.vue'),
-    meta: {
-      title: '測試'
     }
   },
   {

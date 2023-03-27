@@ -2,9 +2,9 @@
   <div class="container">
     <nav class="navbar navbar-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <RouterLink class="navbar-brand" to="/feed">
           <img src="../../image/logo_kitahora.svg" width="195" height="60" alt="">
-        </a>
+        </RouterLink>
       </div>
     </nav>
     <div class="container main mb-2">

@@ -18,10 +18,7 @@
                             <select class="form-select" aria-label="Default select example"
                                 v-model="tempProduct.Product_Type">
                                 <option selected>請選擇</option>
-                                <option value="套餐">套餐</option>
-                                <option value="單點">單點</option>
-                                <option value="飲料">飲料</option>
-                                <option value="冰淇淋">冰淇淋</option>
+                                <option v-for="item in Product_Type" :key="item.ID" :value="item.Type">{{ item.Type }}</option>
                             </select>
                         </div>
                         <div class="w-100"></div>
@@ -41,9 +38,9 @@
                         </div>
                         <div class="w-100"></div>
                         <div class="col-12">
-                            <label for="exampleFormControlInput2" class="form-label">商品描述</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput2"
-                                v-model="tempProduct.Product_Description" placeholder="商店敘述">
+                            <label for="exampleFormControlInput3" class="form-label">商品描述</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput3"
+                                v-model="tempProduct.Product_Description" placeholder="商品敘述">
                         </div>
                         <div class="col-12">
                             <div class="mb-3">
@@ -94,7 +91,15 @@ export default {
         watch(() => props.product, (newVal) => {
             tempProduct.value = newVal
         })
-
+        let ShopID = sessionStorage.getItem('Shop_ID')
+        const Product_Type = ref([])
+        const get_Product_Type = function () {
+            axios.get(`http://localhost:3000/api/product-type?ShopID=${ShopID}`)
+                .then((res) => {
+                    console.log(res)
+                    Product_Type.value = res.data.data
+                })
+        }
         const showModal = function () {
             model.value.show()
         }
@@ -104,6 +109,7 @@ export default {
         }
 
         onMounted(() => {
+            get_Product_Type()
             model.value = new Modal(modal.value)
         })
         let uploadIMG = null
@@ -137,11 +143,13 @@ export default {
             modal,
             model,
             uploadIMG,
+            Product_Type,
             uploadfile,
             imageLoaded,
             onFileChange,
             showModal,
-            hideModal
+            hideModal,
+            get_Product_Type
         }
     }
 }

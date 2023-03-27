@@ -96,9 +96,13 @@ import { ref, onMounted } from "vue";
 import { useRouter } from 'vue-router';
 export default {
     setup() {
-        const route = useRouter()
+        const router = useRouter()
         let Shop_ManagerID = sessionStorage.getItem('Shop_ManagerID')
         let ShopID = sessionStorage.getItem('Shop_ID')
+        const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1')
+        if (!token) {
+            router.push('/shop_login') // 未登入，導回登入頁面
+        }
         let ShopInfo = ref({
             ShopID: '',
             Shop_Name: '',

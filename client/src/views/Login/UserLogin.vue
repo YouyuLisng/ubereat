@@ -2,9 +2,9 @@
   <div class="container">
     <nav class="navbar navbar-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <RouterLink class="navbar-brand" to="/feed">
           <img src="../../image/logo_kitahora.svg" width="195" height="60" alt="">
-        </a>
+        </RouterLink>
       </div>
     </nav>
     <div class="container main">
@@ -24,9 +24,6 @@
         </div>
         <div class="col-12">
           <button @click="login" style="width: 100%;" type="button" class="btn btn-dark">繼續</button>
-        </div>
-        <div class="col-12">
-          <hr>
         </div>
         <div class="col-12">
           <button style="width: 100%;" type="button" class="btn btn-secondary">
@@ -95,7 +92,9 @@ export default {
           const token = res.data.token
           document.cookie = `token=${token};`
           sessionStorage.setItem('UserID', res.data.UserID)
-          route.push('/')
+          route.push('/feed')
+        } else {
+          console.log(res.data)
         }
       })
     }

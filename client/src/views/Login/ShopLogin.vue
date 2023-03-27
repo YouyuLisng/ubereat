@@ -2,9 +2,9 @@
     <div class="container">
         <nav class="navbar navbar-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">
+                <RouterLink class="navbar-brand" to="/feed">
                     <img src="../../image/logo_kitahora.svg" width="195" height="60" alt="">
-                </a>
+                </RouterLink>
             </div>
         </nav>
         <div class="container main">
@@ -25,15 +25,12 @@
                 <div class="col-12">
                     <button @click="login" style="width: 100%;" type="button" class="btn btn-dark">繼續</button>
                 </div>
-                <div class="col-12">
-                    <hr>
-                </div>
             </div>
         </div>
     </div>
 </template>
   
-<style>
+<style scoped>
 .main {
     max-width: 360px;
     margin: 0 auto;
@@ -66,6 +63,8 @@ export default {
                     const expires = new Date(Date.now() + 60 * 10).toUTCString() // 10 分鐘後的 UTC 時間字串
                     document.cookie = `token=${token};expires=${new Date(expires)};`
                     route.push('/dashboard')
+                } else {
+                    console.log(res)
                 }
             })
         }

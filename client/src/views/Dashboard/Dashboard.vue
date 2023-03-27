@@ -15,7 +15,7 @@
                         <router-link class="nav-link" to="/dashboard/product">商品資訊</router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/dashboard/order">訂單資訊</router-link>
+                        <router-link class="nav-link" to="/dashboard/order">新增商品</router-link>
                     </li>
                     <li class="nav-item">
                         <router-link class="nav-link" to="/dashboard/discount">優惠卷</router-link>
@@ -63,8 +63,13 @@ export default {
                     route.push('/dashboard/shop')
                 } else {
                     console.log(res.data.message)
+                    sessionStorage.clear()
                     route.push('/shop_login')
                 }
+            }).catch(() => {
+                sessionStorage.clear()
+                document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;'
+                route.push('/shop_login')
             })
         })
         const logout = function () {
