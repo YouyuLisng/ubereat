@@ -12,18 +12,23 @@
             <div class="col-9">
                 <div class="row gy-2 gx-2">
                     <div class="col-lg-3 col-md-12 position-relative" v-for="item in productData" :key="item.ProductID">
-                        <router-link class="d-block" :to="`/product/${item.ProductID}`">
-                            <div class="shop-img position-relative">
-                                <img class="img-fluid" :src="item.Product_IMGURL" alt="Responsive image">
+                        <div class="shop-img position-relative" @click="toProductInfo(item.ProductID)">
+                            <img class="img-fluid" :src="item.Product_IMGURL" alt="Responsive image">
+                        </div>
+                        <div class="btn border-0 position-absolute top-0 end-0 love">
+                        </div>
+                        <div class="mt-3">
+                            <div class="row">
+                                <div class="col">
+                                    <p>{{ item.Product_Name }}<br>
+                                        {{ item.Product_Price }} $
+                                    </p>
+                                </div>
+                                <div class="col">
+                                    <button @click="addCart(item)" type="button" class="btn btn-secondary">加入購物車</button>
+                                </div>
                             </div>
-                            <div class="btn border-0 position-absolute top-0 end-0 love">
-                            </div>
-                            <div class="mt-3">
-                                <p>{{ item.Product_Name }}<br>
-                                    {{ item.Product_Price }} $
-                                </p>
-                            </div>
-                        </router-link>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -35,6 +40,7 @@ a {
     text-decoration: none;
     color: #000;
 }
+
 .banner {
     overflow: hidden;
     height: 200px;
@@ -62,6 +68,7 @@ a {
     height: 180px;
     background-repeat: no-repeat;
     background-position: center;
+    cursor: pointer;
 }
 
 .shop-img img {
@@ -71,12 +78,13 @@ a {
 <script>
 import { ref, onMounted } from 'vue'
 import { defineComponent } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 
 export default defineComponent({
     setup() {
         const route = useRoute();
+        const router = useRouter();
         const ShopID = ref(null);
         const productData = ref([])
         const shopData = ref({})
@@ -102,6 +110,23 @@ export default defineComponent({
                     Product_Type.value = res.data.data
                 })
         }
+        //加入購物車
+        const addCart = function (item) {
+            console.log(item)
+            axios.post(`http://localhost:3000/add-toCart`,{
+                data: {
+                    UserID: sessionStorage.getItem('UserID'),
+                    ShopID: ShopID.value,
+                    cartItem: item,
+                    qty: 1
+                }
+            }).then((res) => {
+                console.log(res)
+            })
+        }
+        const toProductInfo = (ID) => {
+            router.push(`/product/${ID}`)
+        }
         onMounted(() => {
             ShopID.value = route.params.id;
             if (ShopID.value !== null) {
@@ -114,7 +139,9 @@ export default defineComponent({
             productData,
             ShopID,
             shopData,
-            Product_Type
+            Product_Type,
+            toProductInfo,
+            addCart
         }
     }
 })

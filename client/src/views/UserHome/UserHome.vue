@@ -137,16 +137,27 @@
                 </form>
             </div>
             <div class="col-lg-2 col-5 order-lg-3 order-3">
-                <button type="button" class="shop_car btn btn-dark float-end rounded-pill" v-if="isLogin">
+                <div class="" v-if="isLogin">
                     <div class="row align-items-center">
-                        <div class="col-lg-4">
-                            <img class="img-fluid icon" src="../../image/649931-01.svg" alt="">
-                        </div>
-                        <div class="col-lg-8">
-                            <p class="d-none d-lg-block">購物車</p>
+                        <div class="dropdown">
+                            <button type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" class="shop_car btn btn-dark float-end rounded-pill" v-if="isLogin">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-4">
+                                        <img class="img-fluid icon" src="../../image/649931-01.svg" alt="">
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <p class="d-none d-lg-block">購物車</p>
+                                    </div>
+                                </div>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            </ul>
                         </div>
                     </div>
-                </button>
+                </div>
                 <div class="row" v-else>
                     <div class="col-6">
                         <router-link to="/user_register">
@@ -256,10 +267,21 @@ export default {
             sessionStorage.clear()
             route.push('/user_login')
         }
+        const carts = ref({})
+        const get_Carts = function () {
+            axios.get('http://localhost:3000/get-Cart', {
+                ShopID: 5
+            }).then((res) => {
+                console.log(res.data)
+                carts.value = res.data
+                console.log('cart', carts.value)
+            })
+        }
         onMounted(() => {
             axios.get(`http://localhost:3000/User?UserID=${UserID}`)
                 .then((res) => {
                     if (res.data.status === 200) {
+                        get_Carts()
                         UserName.value = res.data.data.User_Name
                         isLogin.value = true
                     } else {

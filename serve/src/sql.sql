@@ -63,3 +63,12 @@ CREATE TABLE `Product_Type` (
   `ShopID` INT COMMENT '店家ID',
   `Type` VARCHAR(255) COMMENT '商品型別',
 );
+加入購物車
+CREATE TABLE Carts (
+  `CartID` INT PRIMARY KEY AUTO_INCREMENT COMMENT '購物車ID',
+  `UserID` INT COMMENT '商品ID',
+  `ProductID` INT NOT NULL COMMENT '商品ID',
+  `Product_IMGURL` VARCHAR(50) COMMENT '圖片路徑',
+  `Product_Price` VARCHAR(255) COMMENT '商品價格',
+  FOREIGN KEY(`UserID`) REFERENCES `User`(UserID) ON DELETE SET NULL
+);

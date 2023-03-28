@@ -365,7 +365,7 @@ app.get('/get-product', function (req, res) {
 app.get('/product', function (req, res) {
     var ProductID = req.query.ProductID
     var sql = `SELECT * FROM Product WHERE ProductID = ${ProductID}`
-    db.exec(sql,[], function(result, fields, err) {
+    db.exec(sql, [], function (result, fields, err) {
         if (err) {
             return res.json({ status: 400, message: '查詢失敗' })
         }
@@ -384,16 +384,16 @@ app.delete('/del-product', function (req, res) {
     })
 })
 // 前台取得商品型別
-app.get('/product-type', function (req, res) {
-    var sql = `SELECT * FROM Product_Type`
-    db.exec(sql, [], function (result, fields, err) {
-        if (err) {
-            return res.json({ status: 400, message: '查詢失敗' })
-        }
-        return res.json({ status: 200, message: '查詢成功', data: result })
-    })
-})
-//後台取得商品型別
+// app.get('/product-type', function (req, res) {
+//     var sql = `SELECT * FROM Product_Type`
+//     db.exec(sql, [], function (result, fields, err) {
+//         if (err) {
+//             return res.json({ status: 400, message: '查詢失敗' })
+//         }
+//         return res.json({ status: 200, message: '查詢成功', data: result })
+//     })
+// })
+//前後台取得商品型別
 app.get('/api/product-type', function (req, res) {
     var ShopID = req.query.ShopID
     var sql = `SELECT * FROM Product_Type WHERE ShopID = ${ShopID}`
@@ -419,4 +419,93 @@ app.post('/add_product-type', function (req, res) {
             }
             return res.json({ status: 200, message: '新增成功', data: result })
         })
+})
+//更新商品型別
+app.put('/update_product-type', function (req, res) {
+    console.log(req.body)
+    var ID = req.body.data.ID
+    var sql = `UPDATE Product_Type SET Type = ? WHERE ID = ${ID}`
+    var Type = req.body.data.Type
+    db.exec(sql, [Type], function (result, fields, err) {
+        if (err) {
+            return res.json({ status: 400, message: '更新失敗' })
+        }
+        return res.json({ status: 200, message: '更新成功' })
+    })
+})
+//刪除商品型別
+app.delete('/del_product-type', function (req, res) {
+    var ID = req.query.ID
+    var sql = `DELETE FROM Product_Type WHERE ID = ${ID}`
+    db.exec(sql, [], function (result, fields, err) {
+        if (err) {
+            return res.json({ status: 400, message: '刪除失敗' })
+        }
+        return res.json({ status: 200, message: '刪除成功' })
+    })
+})
+//加入購物車
+app.post('/add-toCart', function (req, res) {
+    console.log(req.body)
+    var UserID = req.body.data.UserID
+    var ShopID = req.body.data.ShopID
+    var { ProductID, Product_Name, Product_IMGURL, Product_Price } = req.body.data.cartItem
+    var qty = req.body.data.qty
+    // 先檢查購物車是否已經有該商品
+    var checkSQL = `SELECT * FROM Carts WHERE UserID = ? AND ProductID = ?`
+    db.exec(checkSQL, [UserID, ProductID], function (result, fields, err) {
+        if (err) {
+            console.error(err)
+            return res.json({ status: 400, message: '加入購物車失敗' })
+        }
+        if (result.length > 0) { // 購物車已有該商品，更新商品數量
+            var updateSQL = `UPDATE Carts SET Quantity = Quantity + 1 WHERE UserID = ? AND ProductID = ?`
+            db.exec(updateSQL, [UserID, ProductID], function (result, fields, err) {
+                if (err) {
+                    console.error(err)
+                    return res.json({ status: 400, message: '加入購物車失敗' })
+                }
+                return res.json({ status: 200, message: '加入購物車成功' })
+            })
+        } else { // 購物車沒有該商品，新增商品到購物車
+            var insertSQL = `INSERT INTO Carts (UserID, ShopID, ProductID, Product_Name, Product_IMGURL, Product_Price, Quantity) VALUES (?, ?, ?, ?, ?, ?, ?)`
+            db.exec(insertSQL, [UserID, ShopID, ProductID, Product_Name, Product_IMGURL, Product_Price, qty], function (result, fields, err) {
+                if (err) {
+                    console.error(err)
+                    return res.json({ status: 400, message: '加入購物車失敗' })
+                }
+                return res.json({ status: 200, message: '加入購物車成功' })
+            })
+        }
+    })
+})
+//取得購物車資料
+app.get('/get-Cart', function (req, res) {
+    console.log(req.body)
+    var sql = `SELECT JSON_ARRAYAGG(
+        JSON_OBJECT(
+            'ShopID', Shop.ShopID,
+            'Shop_Name', Shop.Shop_Name,
+            'Shop_IMG', Shop.Shop_IMGURL,
+            'carts', (
+                SELECT JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'ID', Carts.CartID,
+                        'UserID', Carts.UserID,
+                        'ProductID', Carts.ProductID,
+                        'Product_Name', Carts.Product_Name,
+                        'Product_IMG', Carts.Product_IMGURL,
+                        'Product_Price', Carts.Product_Price,
+                        'Qty', Carts.Quantity
+                    )
+                )
+                FROM Carts
+                WHERE Carts.ShopID = Shop.ShopID AND UserID = 3
+            )
+        )
+    ) AS output
+    FROM Shop WHERE ShopID = 5;`
+    db.exec(sql, [], function(result, fields, err) {
+        return res.send(result[0].output);
+    })
 })

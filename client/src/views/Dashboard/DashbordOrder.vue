@@ -20,12 +20,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in Product_Type" :key="item.ID">
-                            <td>{{ item.Type }}</td>
+                        <tr v-for="(item, index) in Product_Type" :key="item.ID">
+                            <td><input :disabled="index !== editIndex" type="text" class="form-control"
+                                    id="exampleInputEmail1" v-model="item.Type" @keyup.enter="save(item)"
+                                    aria-describedby="emailHelp"></td>
                             <td class="text-center">
                                 <div class="btn-group">
-                                    <button class="btn btn-outline-primary btn-sm">編輯</button>
-                                    <button class="btn btn-outline-danger btn-sm">刪除</button>
+                                    <button @click="edit(item, index)" class="btn btn-outline-primary btn-sm">編輯</button>
+                                    <button @click="del_Type(item)" class="btn btn-outline-danger btn-sm"
+                                        v-if="index !== editIndex">刪除</button>
+                                    <button @click="save(item)" class="btn btn-outline-danger btn-sm" v-else>儲存</button>
                                 </div>
                             </td>
                         </tr>
@@ -115,10 +119,12 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { defineComponent } from 'vue'
+import del_Model from '@/components/DelModel.vue'
 import axios from 'axios'
 
 export default defineComponent({
     setup() {
+        const delModal = ref(null)
         let ShopID = sessionStorage.getItem('Shop_ID')
         const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1')
         if (!token) {
@@ -145,12 +151,39 @@ export default defineComponent({
                 get_Product_Type()
             })
         }
+        const editIndex = ref(-1)
         const Product_Type = ref([])
         const get_Product_Type = function () {
             axios.get(`http://localhost:3000/api/product-type?ShopID=${ShopID}`)
                 .then((res) => {
                     console.log(res)
                     Product_Type.value = res.data.data
+                })
+        }
+        const edit = function (item, index) {
+            console.log(item)
+            editIndex.value = index
+        }
+        const save = function (item) {
+            console.log(item)
+            const editItem = item
+            axios.put(`http://localhost:3000/update_product-type`, {
+                data: {
+                    ID: item.ID,
+                    Type: editItem.Type
+                }
+            }).then((res) => {
+                console.log(res)
+                editIndex.value = -1
+                get_Product_Type()
+            })
+        }
+        const del_Type = function (item) {
+            var ID = item.ID
+            axios.delete(`http://localhost:3000/del_product-type?ID=${ID}`)
+                .then((res) => {
+                    console.log(res)
+                    get_Product_Type()
                 })
         }
         let uploadIMG = null
@@ -182,6 +215,7 @@ export default defineComponent({
             get_Product_Type()
         })
         return {
+            delModal,
             type,
             Product_Type,
             tempProduct,
@@ -190,6 +224,10 @@ export default defineComponent({
             imageLoaded,
             onFileChange,
             uploadIMG,
+            editIndex,
+            edit,
+            save,
+            del_Type
         }
     }
 })
