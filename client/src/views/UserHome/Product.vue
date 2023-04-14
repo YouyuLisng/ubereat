@@ -1,4 +1,7 @@
 <template>
+    <div class="container-fluid">
+        <Navbar></Navbar>
+    </div>
     <div class="container">
         <div class="mx-auto" style="width: 1000px;">
             <div class="row mt-5">
@@ -32,7 +35,11 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
+import Navbar from './components/Navbar.vue';
 export default {
+    components: {
+        Navbar
+    },
     setup() {
         const route = useRoute();
         const productId = route.params.id

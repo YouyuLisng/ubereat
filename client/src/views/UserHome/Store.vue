@@ -1,5 +1,6 @@
 <template>
     <div class="container-fuild px-3 mt-3">
+        <Navbar></Navbar>
         <div class="mt-3 mt-lg-5">
             <Menu></Menu>
             <hr>
@@ -73,10 +74,12 @@
 p {
     margin-bottom: 0;
 }
+
 a {
     text-decoration: none;
     color: black;
 }
+
 .icon {
     width: 30px;
     height: 30px;
@@ -121,7 +124,7 @@ a {
 
 @media(max-width: 575px) {
     .shop-img img {
-        top: -45%;
+        top: -30%;
     }
 }
 
@@ -154,10 +157,12 @@ import { useRouter } from 'vue-router'
 import Menu from './components/ProductMenu.vue'
 import axios from 'axios';
 import Carousel from './components/CarouseSwiper.vue';
+import Navbar from './components/Navbar.vue';
 export default {
     setup() {
         const route = useRouter()
         const ShopData = ref([])
+        const UserName = ref('')
         const UserData = ref({
             User_Name: ''
         })
@@ -200,6 +205,7 @@ export default {
         return {
             ShopData,
             UserData,
+            UserName,
             logout,
             get_product_id,
             isLogin
@@ -208,6 +214,7 @@ export default {
     components: {
         Menu,
         Carousel,
+        Navbar
     }
 }
 </script>

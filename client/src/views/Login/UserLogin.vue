@@ -2,7 +2,7 @@
   <div class="container">
     <nav class="navbar navbar-light">
       <div class="container-fluid">
-        <RouterLink class="navbar-brand" to="/feed">
+        <RouterLink class="navbar-brand" to="/">
           <img src="../../image/logo_kitahora.svg" width="195" height="60" alt="">
         </RouterLink>
       </div>
@@ -92,7 +92,7 @@ export default {
           const token = res.data.token
           document.cookie = `token=${token};`
           sessionStorage.setItem('UserID', res.data.UserID)
-          route.push('/feed')
+          route.push('/')
         } else {
           console.log(res.data)
         }

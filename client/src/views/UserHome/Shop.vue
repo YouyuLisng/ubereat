@@ -1,4 +1,5 @@
 <template>
+    <Navbar></Navbar>
     <div class="container-fluid mt-3">
         <h3 class="p-3">{{ shopData.Shop_Name }}</h3>
         <div class="row">
@@ -80,8 +81,12 @@ import { ref, onMounted } from 'vue'
 import { defineComponent } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
+import Navbar from './components/Navbar.vue';
 
 export default defineComponent({
+    components: {
+        Navbar
+    },
     setup() {
         const route = useRoute();
         const router = useRouter();

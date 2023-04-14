@@ -482,30 +482,19 @@ app.post('/add-toCart', function (req, res) {
 //取得購物車資料
 app.get('/get-Cart', function (req, res) {
     console.log(req.body)
-    var sql = `SELECT JSON_ARRAYAGG(
-        JSON_OBJECT(
-            'ShopID', Shop.ShopID,
-            'Shop_Name', Shop.Shop_Name,
-            'Shop_IMG', Shop.Shop_IMGURL,
-            'carts', (
-                SELECT JSON_ARRAYAGG(
-                    JSON_OBJECT(
-                        'ID', Carts.CartID,
-                        'UserID', Carts.UserID,
-                        'ProductID', Carts.ProductID,
-                        'Product_Name', Carts.Product_Name,
-                        'Product_IMG', Carts.Product_IMGURL,
-                        'Product_Price', Carts.Product_Price,
-                        'Qty', Carts.Quantity
-                    )
-                )
-                FROM Carts
-                WHERE Carts.ShopID = Shop.ShopID AND UserID = 3
-            )
-        )
-    ) AS output
-    FROM Shop WHERE ShopID = 5;`
+    var sql = `SELECT Shop.ShopID, Shop.Shop_Name, Shop.Shop_Description, Shop.Shop_IMGURL, Shop.Shop_delivery, Shop.Shop_Address, Shop.Shop_Type,
+    JSON_UNQUOTE(JSON_ARRAYAGG(JSON_OBJECT('ShopID', Product.ShopID, 'ProductName', Product.Product_Name, 'ProductPrice', Product.Product_Price, 'ProductDescription', Product.Product_Description, 'ProductIMG', Product.Product_IMGURL, 'ProductQuantity', Carts.Quantity))) as Products, 
+    SUM(Product.Product_Price * Carts.Quantity) as Total_Price,
+    SUM(Carts.Quantity) as Total_Quantity
+    FROM Carts
+    JOIN Product ON Carts.ProductID = Product.ProductID
+    JOIN Shop ON Product.ShopID = Shop.ShopID
+    GROUP BY Shop.ShopID;`
     db.exec(sql, [], function(result, fields, err) {
-        return res.send(result[0].output);
+        var data = result.map(function(row) {
+            row.Products = JSON.parse(row.Products);
+            return row;
+        });
+        return res.json({ status: 200, message: '查詢成功', data: data });
     })
 })

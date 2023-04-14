@@ -65,7 +65,14 @@
 
     .swiper-button-next,
     .swiper-button-prev {
-        display: none;
+        top: 65% !important;
+    }
+
+    .swiper-button-next {
+        right: -5% !important;
+    }
+    .swiper-button-prev {
+        left: -5% !important;
     }
 }
 

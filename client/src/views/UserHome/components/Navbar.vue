@@ -4,7 +4,7 @@
             <div class="col-lg-1 col-3">
                 <button class="btn btn-link" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
                     aria-controls="offcanvasRight">
-                    <img class="img-fuild icon" src="../../image/5135168.png" alt="">
+                    <img class="img-fuild icon" src="../../../image/5135168.png" alt="">
                 </button>
                 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasRight"
                     aria-labelledby="offcanvasRightLabel">
@@ -12,7 +12,7 @@
                         <div v-if="isLogin">
                             <div class="d-flex mt-3" style="width: 170px;">
                                 <div>
-                                    <img style="width: 50px;" class="img-fluid" src="../../image/64572.png" alt="">
+                                    <img style="width: 50px;" class="img-fluid" src="../../../image/64572.png" alt="">
                                 </div>
                                 <div class="ps-3">
                                     <p v-if="isLogin">{{ UserName }}</p>
@@ -23,7 +23,7 @@
                                 <div class="col-12">
                                     <div class="d-flex justify-content-between align-items-center" style="width: 120px;">
                                         <div>
-                                            <img class="icon img-fluid" src="../../image/file-text.svg" alt="">
+                                            <img class="icon img-fluid" src="../../../image/file-text.svg" alt="">
                                         </div>
                                         <div>
                                             <p class="fw-bold">近期訂單</p>
@@ -33,7 +33,7 @@
                                 <div class="col-12">
                                     <div class="d-flex justify-content-between align-items-center" style="width: 120px;">
                                         <div>
-                                            <img class="icon img-fluid" src="../../image/suit-heart.svg" alt="">
+                                            <img class="icon img-fluid" src="../../../image/suit-heart.svg" alt="">
                                         </div>
                                         <div>
                                             <p class="fw-bold">最愛餐廳</p>
@@ -43,7 +43,7 @@
                                 <div class="col-12">
                                     <div class="d-flex justify-content-between align-items-center" style="width: 120px;">
                                         <div>
-                                            <img class="icon img-fluid" src="../../image/wallet2.svg" alt="">
+                                            <img class="icon img-fluid" src="../../../image/wallet2.svg" alt="">
                                         </div>
                                         <div>
                                             <p class="fw-bold">我的錢包</p>
@@ -56,8 +56,10 @@
                                 </div>
                                 <hr>
                                 <div class="col-12">
-                                    <router-link class="btn btn-secondary w-100" data-bs-dismiss="offcanvas"
-                                        to="/shop_register">新增您的餐廳</router-link>
+                                    <router-link to="/shop_register" data-bs-dismiss="offcanvas">
+                                        <button type="button" class="btn btn-secondary w-100"
+                                            data-bs-dismiss="offcanvas">新增您的餐廳</button>
+                                    </router-link>
                                 </div>
                                 <div class="col-12">
                                     <button type="button" class="btn btn-secondary w-100"
@@ -69,7 +71,7 @@
                                             <div type="button"
                                                 class="btn btn-light d-flex justify-content-center align-items-center">
                                                 <div class="d-flex justify-content-center align-items-center">
-                                                    <img class="img-fluid" src="../../image/apple.svg" alt="">
+                                                    <img class="img-fluid" src="../../../image/apple.svg" alt="">
                                                 </div>
                                                 <div>
                                                     Apple
@@ -80,7 +82,7 @@
                                             <div type="button"
                                                 class="btn btn-light d-flex justify-content-center align-items-center">
                                                 <div class="d-flex justify-content-center align-items-center">
-                                                    <img class="img-fluid" src="../../image/android2.svg" alt="">
+                                                    <img class="img-fluid" src="../../../image/android2.svg" alt="">
                                                 </div>
                                                 <div>
                                                     Android
@@ -121,11 +123,12 @@
                 </div>
             </div>
             <div class="col-lg-2 col-4 img-fuild d-flex justify-content-center align-items-center">
-                <img class="img-fluid" src="../../image/logo_kitahora.svg" alt="">
+                <img class="img-fluid" src="../../../image/logo_kitahora.svg" alt="">
             </div>
             <div class="col-lg-1 d-none d-lg-block"></div>
             <div class="col-lg-6 order-last order-lg-1">
-                <form class="d-flex justify-content-evenly align-items-center border rounded-3 border-dark p-1">
+                <form style="background-color: #EEEEEE;;"
+                    class="d-flex justify-content-evenly align-items-center border rounded-3 border-dark p-1">
                     <div>
                         <svg style="margin: 7px;" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                             fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -133,27 +136,38 @@
                                 d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                         </svg>
                     </div>
-                    <input class="form-control border-0" type="search" placeholder="美食 餐廳 飲料" aria-label="Search">
+                    <input style="background-color: #EEEEEE;;" class="form-control border-0" type="search"
+                        placeholder="美食 餐廳 飲料" aria-label="Search">
                 </form>
             </div>
             <div class="col-lg-2 col-5 order-lg-3 order-3">
                 <div class="" v-if="isLogin">
                     <div class="row align-items-center">
                         <div class="dropdown">
-                            <button type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" class="shop_car btn btn-dark float-end rounded-pill" v-if="isLogin">
+                            <button type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"
+                                class="shop_car btn btn-dark rounded-pill" v-if="isLogin">
                                 <div class="row align-items-center">
                                     <div class="col-lg-4">
-                                        <img class="img-fluid icon" src="../../image/649931-01.svg" alt="">
+                                        <img class="img-fluid icon" src="../../../image/649931-01.svg" alt="">
                                     </div>
                                     <div class="col-lg-8">
-                                        <p class="d-none d-lg-block">購物車</p>
+                                        <p class="d-none d-lg-block">{{ cartQty }}台購物車</p>
                                     </div>
                                 </div>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                <div class="row px-2 py-2" v-for="item in carts" :key="item.ShopID">
+                                    <div class="col-3">
+                                        <img style="width: 64px; height: 64px;" class="img-fluid rounded-circle" :src="item.Shop_IMGURL" alt="">
+                                    </div>
+                                    <div class="col-7">
+                                        <p class="title">{{ item.Shop_Name }}</p>
+                                        <p class="total">小計：${{ item.Total_Price }}</p>
+                                    </div>
+                                    <div class="col d-flex align-items-center">
+                                        <div class="Total_Quantity">{{ item.Total_Quantity }}</div>
+                                    </div>
+                                </div>
                             </ul>
                         </div>
                     </div>
@@ -172,7 +186,6 @@
                 </div>
             </div>
         </div>
-        <RouterView></RouterView>
     </div>
 </template>
 
@@ -230,7 +243,7 @@ p {
 }
 
 .love {
-    background-image: url(../../image/suit-heart.svg);
+    background-image: url(../../../image/suit-heart.svg);
     background-position: center center;
     width: 30px;
     height: 30px;
@@ -238,7 +251,7 @@ p {
 }
 
 .love:hover {
-    background-image: url(../../image/suit-heart-fill.svg);
+    background-image: url(../../../image/suit-heart-fill.svg);
 }
 
 .check-account {
@@ -249,6 +262,26 @@ p {
 
 .check-account:hover {
     color: #68A357;
+}
+
+.dropdown-menu {
+    width: 420px !important;
+}
+
+.title {
+    font-weight: 500;
+}
+.total {
+    font-weight: 300;
+}
+.Total_Quantity {
+    font-weight: 200;
+    border-radius: 50%;
+    text-align: center;
+    width: 24px;
+    height: 24px;
+    background-color: black;
+    color: #fff;
 }
 </style>
 
@@ -268,13 +301,14 @@ export default {
             route.push('/user_login')
         }
         const carts = ref({})
+        const cartQty = ref(null)
         const get_Carts = function () {
             axios.get('http://localhost:3000/get-Cart', {
                 ShopID: 5
             }).then((res) => {
                 console.log(res.data)
-                carts.value = res.data
-                console.log('cart', carts.value)
+                carts.value = res.data.data
+                cartQty.value = carts.value.length
             })
         }
         onMounted(() => {
@@ -295,6 +329,8 @@ export default {
 
         })
         return {
+            carts,
+            cartQty,
             UserName,
             logout,
             isLogin
