@@ -2,61 +2,40 @@
     <div>
         <div class="container">
             <div class="text-end p-3">
-                <button @click="open_addModel(true, {})" type="button" class="btn btn-primary">新增商品</button>
+                <button @click="open_addModel(true, {})" type="button" class="btn btn-dark rounded-0">新增商品</button>
             </div>
-            <table class="table mt-4">
-                <thead>
-                    <tr>
-                        <th>分類</th>
-                        <th>產品名稱</th>
-                        <th>售價</th>
-                        <th>是否啟用</th>
-                        <th class="text-center">編輯</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="item in Product" :key="item.ProductID">
-                        <td>{{ item.Product_Type }}</td>
-                        <td>{{ item.Product_Name }}</td>
-                        <td>
-                            {{ item.Product_Price }}
-                        </td>
-                        <td>
-                            <span class="text-success" v-if="item.is_enabled">啟用</span>
-                            <span class="text-muted" v-else>未啟用</span>
-                        </td>
-                        <td class="text-center">
-                            <div class="btn-group">
-                                <button class="btn btn-outline-primary btn-sm"
-                                    @click="open_addModel(false, item)">編輯</button>
-                                <button class="btn btn-outline-danger btn-sm" @click="opendelModal(item)">刪除</button>
+            <div class="dropdown mb-3" v-for="(item, index) in Product" :key="index">
+                <div class="product-wrap" @click="toggleCollapse(index)" :class="{ active: item.active }">
+                    <div class="product-wrap-title">
+                        <h3>{{ item.Product_Type }}</h3>
+                        <div class="product-wrap-button">
+                            <img class="" src="../../../image/plus.png" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div v-for="product in item.Products" class="collapse pt-2" :id="'collapseExample' + index"
+                    :class="{ show: item.active }">
+                    <div class="card card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                {{ product.Product_Name }}
                             </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <!-- <div class="row p-3 gx-3 gy-3">
-                <div class="col-3" v-for="item in Product" :key="item.ProductID">
-                    <div class="col">
-                        <div class="card">
-                            <div class="d-flex justify-content-center align-items-center">
-                                <img :src="item.Product_IMGURL" class="card-img-top" alt="...">
+                            <div class="col-1">
+                                {{ product.Product_Price }}$
                             </div>
-                            <div class="card-body">
-                                <h5 class="card-title text-center">{{ item.Product_Name }}</h5>
+                            <div class="col-5">
+                                {{ product.Product_Description }}
                             </div>
-                            <div class="row">
-                                <div class="col border text-center">
-                                    <button type="button" class="btn" @click="open_addModel(false, item)">編輯</button>
-                                </div>
-                                <div class="col border text-center">
-                                    <button type="button" class="btn">刪除</button>
+                            <div class="col">
+                                <div class="btn-group">
+                                    <button class="btn btn-outline-dark btn-sm" @click="open_addModel(false, product)">編輯</button>
+                                    <button class="btn btn-outline-danger  btn-sm" @click="opendelModal(product)">刪除</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
         </div>
     </div>
     <addModal ref="addModal" :product="tempProduct" @update-product="updateProduct"></addModal>
@@ -76,12 +55,51 @@
     height: auto;
     object-fit: cover;
 }
+
+.product-wrap {
+    position: relative;
+    cursor: pointer;
+}
+
+.product-wrap-title {
+    background-color: #ebe9df;
+    border-radius: 0 20px 20px 20px;
+    -webkit-transition: .3s;
+    transition: .3s;
+    padding: 15px;
+    -webkit-box-shadow: 3px 4px 0 0 rgba(39, 39, 36, .3);
+    box-shadow: 3px 4px 0 0 rgba(39, 39, 36, .3);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: space-between;
+}
+.product-wrap-title:hover {
+    box-shadow: 0px 0px 0 0 rgba(39, 39, 36, .3);
+}
+.product-wrap-title h3 {
+    font-size: 1.4rem;
+    line-height: 26px;
+    letter-spacing: .05em;
+    font-weight: 500;
+}
+
+.product-wrap-button img {
+    width: 30px;
+    height: 30px;
+}
+
+.dropdown {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
 </style>
 <script>
 import { ref, onMounted } from 'vue'
 import { defineComponent } from 'vue'
-import addModal from '@/components/AddProduct.vue'
-import delModel from '@/components/DelModel.vue'
+import addModal from '@/components/Product/AddProduct.vue'
+import delModel from '@/components/Product/DelModel.vue'
 import axios from 'axios'
 
 export default defineComponent({
@@ -104,14 +122,23 @@ export default defineComponent({
                 Product.value = res.data.data
             })
         }
+        const toggleCollapse = (index) => {
+            Product.value.forEach((item, i) => {
+                if (index === i) {
+                    item.active = !item.active;
+                } else {
+                    item.active = false;
+                }
+            });
+        };
         onMounted(() => {
             getProduct()
         })
         var tempProduct = ref({})
         const open_addModel = function (New, item) {
+            console.log(item)
             if (New) {
                 tempProduct.value = item
-                tempProduct.value.Product_Type = '請選擇'
             } else {
                 tempProduct.value = { ...item }
             }
@@ -162,7 +189,8 @@ export default defineComponent({
             opendelModal,
             isNew,
             updateProduct,
-            delProduct
+            delProduct,
+            toggleCollapse,
 
         }
     }

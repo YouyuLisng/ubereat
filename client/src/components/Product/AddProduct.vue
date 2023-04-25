@@ -16,9 +16,8 @@
                         <div class="col-6">
                             <label class="form-label">商品類型</label>
                             <select class="form-select" aria-label="Default select example"
-                                v-model="tempProduct.Product_Type">
-                                <option selected>請選擇</option>
-                                <option v-for="item in Product_Type" :key="item.ID" :value="item.Type">{{ item.Type }}</option>
+                                v-model="tempProduct.ID">
+                                <option v-for="item in Product_Type" :key="item.ID" :value="item.ID">{{ item.Product_Type }}</option>
                             </select>
                         </div>
                         <div class="w-100"></div>
@@ -57,7 +56,7 @@
                         <div class="col-12">
                             <label class="form-label">商品圖片 預覽</label>
                             <div class="border rounded-3 p-3 d-flex justify-content-center align-items-center img-wrap">
-                                <img :src="tempProduct.Product_IMGURL" alt="">
+                                <img class="img-fluid" :src="tempProduct.Product_IMGURL" alt="">
                             </div>
                         </div>
                     </div>

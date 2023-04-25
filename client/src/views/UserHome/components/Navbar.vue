@@ -2,11 +2,11 @@
     <div class="container-fuild px-3 mt-3">
         <div class="row gy-4">
             <div class="col-lg-1 col-3">
-                <button class="btn btn-link" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                    aria-controls="offcanvasRight">
+                <button class="btn btn-link" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasStart"
+                    aria-controls="offcanvasStart">
                     <img class="img-fuild icon" src="../../../image/5135168.png" alt="">
                 </button>
-                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasRight"
+                <div class="offcanvas offcanvas-start UserOffcanvas" tabindex="-1" id="offcanvasStart"
                     aria-labelledby="offcanvasRightLabel">
                     <div class="offcanvas-body">
                         <div v-if="isLogin">
@@ -123,7 +123,9 @@
                 </div>
             </div>
             <div class="col-lg-2 col-4 img-fuild d-flex justify-content-center align-items-center">
-                <img class="img-fluid" src="../../../image/logo_kitahora.svg" alt="">
+                <router-link to="/" style="width: 100%;">
+                    <img class="img-fluid" src="../../../image/logo_kitahora.svg" alt="">
+                </router-link>
             </div>
             <div class="col-lg-1 d-none d-lg-block"></div>
             <div class="col-lg-6 order-last order-lg-1">
@@ -147,18 +149,25 @@
                             <button type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"
                                 class="shop_car btn btn-dark rounded-pill" v-if="isLogin">
                                 <div class="row align-items-center">
-                                    <div class="col-lg-4">
-                                        <img class="img-fluid icon" src="../../../image/649931-01.svg" alt="">
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <p class="d-none d-lg-block">{{ cartQty }}台購物車</p>
+                                    <div class="col-lg-12">
+                                        <div class="d-flex align-items-center justify-content-around">
+                                            <div>
+                                                <img class="img-fluid icon" src="../../../image/649931-01.svg" alt="">
+                                            </div>
+                                            <div>
+                                                <p>{{ cartQty }}台購物車</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <div class="row px-2 py-2" v-for="item in carts" :key="item.ShopID">
+                            <ul class="dropdown-menu p-0" aria-labelledby="dropdownMenuButton1">
+                                <div @click="click_cart(item)" data-bs-toggle="offcanvas" data-bs-target="#carts-right"
+                                    aria-controls="offcanvasRight" class="row px-2 py-2 gx-0 cart-list"
+                                    v-for="item in carts" :key="item.ShopID">
                                     <div class="col-3">
-                                        <img style="width: 64px; height: 64px;" class="img-fluid rounded-circle" :src="item.Shop_IMGURL" alt="">
+                                        <img style="width: 64px; height: 64px;" class="img-fluid rounded-circle"
+                                            :src="item.Shop_IMGURL" alt="">
                                     </div>
                                     <div class="col-7">
                                         <p class="title">{{ item.Shop_Name }}</p>
@@ -186,6 +195,24 @@
                 </div>
             </div>
         </div>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="carts-right" aria-labelledby="offcanvasRightLabel">
+            <div class="offcanvas-header">
+                <h5 id="offcanvasRightLabel">購物車</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <h4>{{ temp_Cart.Shop_Name }}</h4>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p style="font-weight: 500; letter-spacing: 2px;">{{ temp_Cart.Total_Quantity }}項商品</p>
+                    </div>
+                    <div>
+                        <p style="font-weight: 500; letter-spacing: 2px;">小計：＄{{ temp_Cart.Total_Price }}</p>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -205,7 +232,7 @@ p {
     }
 }
 
-.offcanvas {
+.UserOffcanvas {
     width: 300px !important;
 }
 
@@ -271,9 +298,11 @@ p {
 .title {
     font-weight: 500;
 }
+
 .total {
     font-weight: 300;
 }
+
 .Total_Quantity {
     font-weight: 200;
     border-radius: 50%;
@@ -282,6 +311,11 @@ p {
     height: 24px;
     background-color: black;
     color: #fff;
+}
+
+.cart-list:hover {
+    background-color: #C7D3DD;
+    cursor: pointer;
 }
 </style>
 
@@ -300,16 +334,24 @@ export default {
             sessionStorage.clear()
             route.push('/user_login')
         }
+        // 獲取購物車資料並且儲存
         const carts = ref({})
         const cartQty = ref(null)
         const get_Carts = function () {
-            axios.get('http://localhost:3000/get-Cart', {
-                ShopID: 5
-            }).then((res) => {
-                console.log(res.data)
-                carts.value = res.data.data
-                cartQty.value = carts.value.length
-            })
+            axios.get(`http://localhost:3000/get-Cart?UserID=${UserID}`)
+                .then((res) => {
+                    console.log(res.data);
+                    carts.value = res.data.data;
+                    cartQty.value = carts.value.length;
+                });
+        };
+        // 點擊購物車商店資訊獲取更詳細的購物產品資訊
+        const temp_Cart = ref({})
+        const temp_Cart_Prouct = ref([])
+        const click_cart = function (value) {
+            console.log(value)
+            temp_Cart.value = value
+            temp_Cart_Prouct.value = value.Products
         }
         onMounted(() => {
             axios.get(`http://localhost:3000/User?UserID=${UserID}`)
@@ -329,11 +371,14 @@ export default {
 
         })
         return {
-            carts,
-            cartQty,
             UserName,
             logout,
-            isLogin
+            isLogin,
+            carts,
+            cartQty,
+            click_cart,
+            temp_Cart,
+            temp_Cart_Prouct
         }
     }
 }

@@ -72,3 +72,18 @@ CREATE TABLE Carts (
   `Product_Price` VARCHAR(255) COMMENT '商品價格',
   FOREIGN KEY(`UserID`) REFERENCES `User`(UserID) ON DELETE SET NULL
 );
+選項選項型態 
+CREATE TABLE Option_Type (
+  `Option_Type_ID` INT PRIMARY KEY AUTO_INCREMENT COMMENT '選項ID',
+  `Option_Type` INT COMMENT '選項型態名稱',
+);
+產品選項 
+CREATE TABLE Option (
+  `OptionID` INT PRIMARY KEY AUTO_INCREMENT COMMENT '選項ID',
+  `Option_Type_ID` VARCHAR(50) COMMENT 'Option_Type FK ',
+  `ProdcutID` INT COMMENT '商品ID',
+  `OptionName` INT NOT NULL COMMENT '選項名稱',
+  `OptionPrice` VARCHAR(50) COMMENT '選項價格',
+  FOREIGN KEY(`Option_Type_ID`) REFERENCES `Option_Type`(Option_Type_ID) ON DELETE SET NULL
+  FOREIGN KEY(`ProdcutID`) REFERENCES `Product`(ProductID) ON DELETE SET NULL
+);

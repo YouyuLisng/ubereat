@@ -1,43 +1,101 @@
 <template>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">後台管理</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav justify-content-center align-items-center ms-auto">
-                    <li class="nav-item">
-                        <router-link class="nav-link" to="/dashboard/shop">商店資訊</router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link class="nav-link" to="/dashboard/product">商品資訊</router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link class="nav-link" to="/dashboard/order">新增商品</router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link class="nav-link" to="/dashboard/discount">優惠卷</router-link>
-                    </li>
-                    <li class="nav-item" @click="logout">
-                        <router-link class="nav-link" to="/shop_login">登出</router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link class="nav-link" to="/dashboard/discount">
-                            <img class="icon img-fluid" src="../../image/person-circle.svg" alt="">
+    <div class="container-fluid border-bottom">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Uber Eat Mananger</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="#">Help</a>
+                        </li>
+                        <li class="nav-item">
+                            <a @click="logout" class="nav-link" href="#">Log Out</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <section class="container-fluid">
+        <div style="height: 100vh;" class="row">
+            <div class="col-2 border-end border-dark border-3 p-1">
+                <div class="row gy-4 m-0">
+                    <div class="col-12">
+                        <router-link class="nav-link" to="/dashboard/home">
+                            <div class="d-flex justify-content-center side_menu_wrap">
+                                <div class="side_icon pe-3">
+                                    <img src="../../image/home.png" alt="">
+                                </div>
+                                <div>
+                                    <p style="line-height: 30px; font-size: 18px;">首頁</p>
+                                </div>
+                            </div>
                         </router-link>
-                    </li>
-                </ul>
+                    </div>
+                    <div class="col-12">
+                        <router-link class="nav-link" to="/">
+                            <div class="d-flex justify-content-center side_menu_wrap">
+                                <div class="side_icon pe-3">
+                                    <img src="../../image/order.png" alt="">
+                                </div>
+                                <div>
+                                    <p style="line-height: 30px; font-size: 18px;">訂單</p>
+                                </div>
+                            </div>
+                        </router-link>
+                    </div>
+                    <div class="col-12">
+                        <router-link class="nav-link" to="/dashboard/product/product-list">
+                            <div class="d-flex justify-content-center side_menu_wrap">
+                                <div class="side_icon pe-3">
+                                    <img src="../../image/fork.png" alt="">
+                                </div>
+                                <div>
+                                    <p style="line-height: 30px; font-size: 18px;">菜單</p>
+                                </div>
+                            </div>
+                        </router-link>
+                    </div>
+                </div>
+            </div>
+            <div class="col-10">
+                <RouterView></RouterView>
             </div>
         </div>
-    </nav>
-    <RouterView></RouterView>
+    </section>
 </template>
-<style scoped>
-.icon {
+<style>
+p {
+    margin-bottom: 0;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    color: black;
+}
+
+.side_icon img {
     width: 30px;
     height: 30px;
+}
+.product-menu {
+    max-width: 350px;
+    padding: 0;
+}
+
+.product-menu li {
+    font-size: 18px;
+}
+.side_menu_wrap {
+    max-width: 150px;
 }
 </style>
 <script>
@@ -60,7 +118,6 @@ export default {
                         .then((res) => {
                             sessionStorage.setItem('Shop_ID', res.data.data.ShopID)
                         })
-                    route.push('/dashboard/shop')
                 } else {
                     console.log(res.data.message)
                     sessionStorage.clear()

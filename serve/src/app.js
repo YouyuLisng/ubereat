@@ -12,6 +12,7 @@ const db = require('./db');
 const { json } = require("body-parser");
 const { data } = require("jquery");
 const { decode } = require("punycode");
+const console = require("console");
 const app = express();
 app.use(morgan('combine'));
 app.use(bodyParser.json());
@@ -265,11 +266,14 @@ app.post('/restaurant', function (req, res) {
 app.get('/shop', function (req, res) {
     console.log(req.query.Shop_ManagerID)
     const Shop_ManagerID = req.query.Shop_ManagerID
+    if (!Shop_ManagerID) {
+        return res.status(500).json({ status: 500, message: '請輸入必要參數' })
+    }
     var sql = `SELECT * FROM Shop WHERE Shop_ManagerID = ${Shop_ManagerID}`
     db.exec(sql, [], function (result, fields, err) {
         if (err) {
             console.log(err)
-            return res.json({ status: 500, message: '失敗', error: err.message });
+            return res.json({ status: 500, message: '查詢失敗', error: err.message });
         }
         return res.json({ status: 200, message: '成功', data: result[0] })
     })
@@ -278,8 +282,14 @@ app.get('/shop', function (req, res) {
 app.get('/api/shop', function (req, res) {
     console.log(req.query.ShopID)
     const ShopID = req.query.ShopID
+    if (!ShopID) {
+        return res.status(500).json({ status: 500, message: '請輸入必要參數' })
+    }
     var sql = `SELECT * FROM Shop WHERE ShopID = ${ShopID}`
-    db.exec(sql, [], function (result, fields) {
+    db.exec(sql, [], function (result, fields, err) {
+        if (err) {
+            return res.json({ status: 500, message: '查詢失敗' });
+        }
         return res.json({ status: 200, message: '成功', data: result[0] })
     })
 })
@@ -299,6 +309,9 @@ app.put('/upadte-shop', function (req, res) {
     var ShopID = req.body.ShopID
     console.log(ShopID)
     const { Shop_Name, Shop_Description, Shop_IMGURL, Shop_delivery, Shop_Address } = req.body
+    if (!ShopID || !Shop_Name || !Shop_Description || !Shop_IMGURL || !Shop_delivery || !Shop_Address) {
+        return res.status(500).json({ status: 500, message: '請輸入必要參數' })
+    }
     var sql = `UPDATE Shop SET  Shop_Name = ?, Shop_Description = ?, Shop_IMGURL = ?, Shop_delivery = ?, Shop_Address = ? WHERE ShopID = ${ShopID}`
     db.exec(sql, [Shop_Name, Shop_Description, Shop_IMGURL, Shop_delivery, Shop_Address], function (result, fields, err) {
         if (err) {
@@ -315,9 +328,12 @@ app.post('/add-product', function (req, res) {
     var ShopID = req.body.ShopID;
     var Product_IMGURL = req.body.Product_IMGURL || 'https://cn-geo1.uber.com/static/mobile-content/eats/placeholder_images/placeholder_image_grocery_300x300.png'
     var is_enabled = req.body.is_enabled || '1'
-    const { Product_Type, Product_Name, Product_Price, Product_Description } = req.body.data
-    var sql = `INSERT INTO Product SET ShopID = ?,Product_Type = ?, Product_Name = ?, Product_Price = ?, Product_Description = ?, Product_IMGURL = ? , is_enabled  = ?;`
-    db.exec(sql, [ShopID, Product_Type, Product_Name, Product_Price, Product_Description, Product_IMGURL, is_enabled], function (result, fields, err) {
+    const { ID, Product_Name, Product_Price, Product_Description } = req.body.data
+    if (!ShopID || !ID || !Product_Name || !Product_Price || !Product_Description || !Product_IMGURL || !is_enabled) {
+        return res.status(500).json({ status: 500, message: '請輸入必要參數' })
+    }
+    var sql = `INSERT INTO Product SET ShopID = ?,Product_Type_ID = ?, Product_Name = ?, Product_Price = ?, Product_Description = ?, Product_IMGURL = ? , is_enabled  = ?;`
+    db.exec(sql, [ShopID, ID, Product_Name, Product_Price, Product_Description, Product_IMGURL, is_enabled], function (result, fields, err) {
         if (err) {
             return res.json({ status: 400, message: '新增失敗' })
         }
@@ -328,9 +344,12 @@ app.post('/add-product', function (req, res) {
 app.put('/upadte-product', function (req, res) {
     var ProductID = req.body.data.ProductID
     console.log(req.body)
-    const { Product_Type, Product_Name, Product_Price, Product_Description, Product_IMGURL, is_enabled } = req.body.data
-    var sql = `UPDATE Product SET Product_Type = ?,  Product_Name = ?, Product_Description = ?, Product_Price = ?, Product_IMGURL = ?, is_enabled = ? WHERE ProductID = ${ProductID}`
-    db.exec(sql, [Product_Type, Product_Name, Product_Description, Product_Price, Product_IMGURL, is_enabled], function (result, fields, err) {
+    const { ID, Product_Name, Product_Price, Product_Description, Product_IMGURL, is_enabled } = req.body.data
+    if (!ID || !Product_Name || !Product_Price || !Product_Description || !Product_IMGURL || !is_enabled) {
+        return res.status(500).json({ status: 500, message: '請輸入必要參數' })
+    }
+    var sql = `UPDATE Product SET Product_Type_ID = ?,  Product_Name = ?, Product_Description = ?, Product_Price = ?, Product_IMGURL = ?, is_enabled = ? WHERE ProductID = ${ProductID}`
+    db.exec(sql, [ID, Product_Name, Product_Description, Product_Price, Product_IMGURL, is_enabled], function (result, fields, err) {
         if (err) {
             console.error(err)
             return res.status(500).json({ status: 500, message: '更新失敗' })
@@ -340,30 +359,81 @@ app.put('/upadte-product', function (req, res) {
 })
 //後台取得商品資料
 app.get('/get-all-product', function (req, res) {
-    console.log(req.body)
-    var ShopID = req.query.ShopID
-    var sql = `SELECT * FROM Product WHERE ShopID = ${ShopID}`
+    var ShopID = req.query.ShopID;
+    if (!ShopID) {
+        return res.status(500).json({ status: 500, message: '請輸入必要參數' })
+    }
+    var sql = `SELECT 
+        Product.ProductID, 
+        Product.Product_Name, 
+        Product.Product_Price, 
+        Product.Product_Description, 
+        Product.Product_IMGURL, 
+        Product.is_enabled, 
+        Product_Type.Product_Type, 
+        Product_Type.ID
+    FROM 
+        Product_Type
+        INNER JOIN Product ON Product_Type.ID = Product.Product_Type_ID
+    WHERE 
+        Product.ShopID = ${ShopID}`;
     db.exec(sql, [], function (result, fields, err) {
         if (err) {
-            return res.json({ status: 400, message: '查詢失敗' })
+            return res.json({ status: 400, message: '查詢失敗' });
         }
-        return res.json({ status: 200, message: '成功', data: result })
-    })
-})
+        // 將相同的產品類型集中在一個陣列中
+        const data = result.reduce((acc, curr) => {
+            const index = acc.findIndex(item => item.ID === curr.ID);
+            if (index === -1) {
+                acc.push({
+                    ID: curr.ID,
+                    Product_Type: curr.Product_Type,
+                    Products: [curr]
+                });
+            } else {
+                acc[index].Products.push(curr);
+            }
+            return acc;
+        }, []);
+        return res.json({ status: 200, message: '成功', data });
+    });
+});
 //前台取得商品資料
 app.get('/get-product', function (req, res) {
-    var ShopID = req.query.ShopID
-    var sql = `SELECT * FROM Product WHERE ShopID = ${ShopID} AND is_enabled = 1`
+    var ShopID = req.query.ShopID;
+    if (!ShopID) {
+        return res.status(500).json({ status: 500, message: '請輸入必要參數' })
+    }
+    var sql = `
+    SELECT 
+    Product.ProductID, 
+    Product.Product_Name, 
+    Product.Product_Price, 
+    Product.Product_Description, 
+    Product.Product_IMGURL, 
+    Product.is_enabled, 
+    Product_Type.Product_Type, 
+    Product_Type.ID
+FROM 
+    Product_Type
+    INNER JOIN Product ON Product_Type.ID = Product.Product_Type_ID
+WHERE 
+    Product.ShopID = ${ShopID}
+    AND Product.is_enabled = 1;
+    `;
     db.exec(sql, [], function (result, fields, err) {
         if (err) {
-            return res.json({ status: 400, message: '查詢失敗' })
+            return res.json({ status: 400, message: '查詢失敗' });
         }
-        return res.json({ status: 200, message: '查詢成功', data: result })
-    })
-})
+        return res.json({ status: 200, message: '查詢成功', data: result });
+    });
+});
 //取得單一商品資訊
 app.get('/product', function (req, res) {
     var ProductID = req.query.ProductID
+    if (!ProductID) {
+        return res.status(500).json({ status: 500, message: '請輸入必要參數' })
+    }
     var sql = `SELECT * FROM Product WHERE ProductID = ${ProductID}`
     db.exec(sql, [], function (result, fields, err) {
         if (err) {
@@ -375,6 +445,9 @@ app.get('/product', function (req, res) {
 //刪除商品
 app.delete('/del-product', function (req, res) {
     var ProductID = req.query.ProductID
+    if (!ProductID) {
+        return res.status(500).json({ status: 500, message: '請輸入必要參數' })
+    }
     var sql = `DELETE FROM Product WHERE ProductID = ${ProductID}`
     db.exec(sql, [], function (result, fields, err) {
         if (err) {
@@ -383,37 +456,45 @@ app.delete('/del-product', function (req, res) {
         return res.json({ status: 200, message: '刪除成功' })
     })
 })
-// 前台取得商品型別
-// app.get('/product-type', function (req, res) {
-//     var sql = `SELECT * FROM Product_Type`
-//     db.exec(sql, [], function (result, fields, err) {
-//         if (err) {
-//             return res.json({ status: 400, message: '查詢失敗' })
-//         }
-//         return res.json({ status: 200, message: '查詢成功', data: result })
-//     })
-// })
-//前後台取得商品型別
+// 前後台取得商品型別
 app.get('/api/product-type', function (req, res) {
-    var ShopID = req.query.ShopID
-    var sql = `SELECT * FROM Product_Type WHERE ShopID = ${ShopID}`
+    var ShopID = req.query.ShopID;
+    if (!ShopID) {
+        return res.status(500).json({ status: 500, message: '請輸入必要參數' })
+    }
+    var sql = `
+      SELECT 
+        Product_Type.ID,
+        Product_Type.Product_Type, 
+        COUNT(Product.Product_Type_ID) AS Product_Count 
+      FROM 
+        Product_Type  
+        LEFT JOIN Product ON Product_Type.ID = Product.Product_Type_ID
+      WHERE 
+        Product_Type.ShopID = ${ShopID}
+      GROUP BY 
+        Product_Type.ID;
+    `;
     db.exec(sql, [], function (result, fields, err) {
         if (err) {
-            return res.json({ status: 400, message: '查詢失敗' })
+            return res.json({ status: 400, message: '查詢失敗' });
         }
-        return res.json({ status: 200, message: '查詢成功', data: result })
-    })
-})
+        return res.json({ status: 200, message: '查詢成功', data: result });
+    });
+});
 //新增商品型別
 app.post('/add_product-type', function (req, res) {
     console.log(req.body)
-    const Type = req.body.data.Type
-    const ShopID = req.body.data.ShopID
-    var sql = `INSERT INTO Product_Type SET ShopID = ?,Type = ?;`
-    if (!Type || !ShopID) {
+    const Product_Type = req.body.data.Product_Type
+    const ShopID = req.body.ShopID
+    if (!Product_Type || !ShopID) {
+        return res.status(500).json({ status: 500, message: '請輸入必要參數' })
+    }
+    var sql = `INSERT INTO Product_Type SET ShopID = ?,Product_Type = ?;`
+    if (!Product_Type || !ShopID) {
         return res.json({ status: 400, message: '請輸入文字' })
     } else
-        db.exec(sql, [ShopID, Type], function (result, fields, err) {
+        db.exec(sql, [ShopID, Product_Type], function (result, fields, err) {
             if (err) {
                 return res.json({ status: 400, message: '新增失敗' })
             }
@@ -424,9 +505,12 @@ app.post('/add_product-type', function (req, res) {
 app.put('/update_product-type', function (req, res) {
     console.log(req.body)
     var ID = req.body.data.ID
-    var sql = `UPDATE Product_Type SET Type = ? WHERE ID = ${ID}`
-    var Type = req.body.data.Type
-    db.exec(sql, [Type], function (result, fields, err) {
+    if (!ID) {
+        return res.status(500).json({ status: 500, message: '請輸入必要參數' })
+    }
+    var sql = `UPDATE Product_Type SET Product_Type = ? WHERE ID = ${ID}`
+    var Product_Type = req.body.data.Product_Type
+    db.exec(sql, [Product_Type], function (result, fields, err) {
         if (err) {
             return res.json({ status: 400, message: '更新失敗' })
         }
@@ -436,6 +520,9 @@ app.put('/update_product-type', function (req, res) {
 //刪除商品型別
 app.delete('/del_product-type', function (req, res) {
     var ID = req.query.ID
+    if (!ID) {
+        return res.status(500).json({ status: 500, message: '請輸入必要參數' })
+    }
     var sql = `DELETE FROM Product_Type WHERE ID = ${ID}`
     db.exec(sql, [], function (result, fields, err) {
         if (err) {
@@ -444,7 +531,19 @@ app.delete('/del_product-type', function (req, res) {
         return res.json({ status: 200, message: '刪除成功' })
     })
 })
-//加入購物車
+// 新增選項option 群組
+app.post('/add-option-group', function (req, res) {
+    console.log(req.body)
+    const { Option_Group } = req.body.Option_Group
+    if (!Option_Group) {
+        return res.status(500).json({ status: 500, message: '請輸入必要參數' })
+    }
+})
+// 取得選項Option 群組
+app.get('/get-option', function(req, res) {
+    console.log(req.query.ShopID)
+})
+// 加入購物車
 app.post('/add-toCart', function (req, res) {
     console.log(req.body)
     var UserID = req.body.data.UserID
@@ -481,7 +580,10 @@ app.post('/add-toCart', function (req, res) {
 })
 //取得購物車資料
 app.get('/get-Cart', function (req, res) {
-    console.log(req.body)
+    var userID = req.query.UserID;
+    if (!userID) {
+        return res.status(500).json({ status: 500, message: '請輸入必要參數' })
+    }
     var sql = `SELECT Shop.ShopID, Shop.Shop_Name, Shop.Shop_Description, Shop.Shop_IMGURL, Shop.Shop_delivery, Shop.Shop_Address, Shop.Shop_Type,
     JSON_UNQUOTE(JSON_ARRAYAGG(JSON_OBJECT('ShopID', Product.ShopID, 'ProductName', Product.Product_Name, 'ProductPrice', Product.Product_Price, 'ProductDescription', Product.Product_Description, 'ProductIMG', Product.Product_IMGURL, 'ProductQuantity', Carts.Quantity))) as Products, 
     SUM(Product.Product_Price * Carts.Quantity) as Total_Price,
@@ -489,9 +591,10 @@ app.get('/get-Cart', function (req, res) {
     FROM Carts
     JOIN Product ON Carts.ProductID = Product.ProductID
     JOIN Shop ON Product.ShopID = Shop.ShopID
+    WHERE Carts.UserID = ?
     GROUP BY Shop.ShopID;`
-    db.exec(sql, [], function(result, fields, err) {
-        var data = result.map(function(row) {
+    db.exec(sql, [userID], function (result, fields, err) {
+        var data = result.map(function (row) {
             row.Products = JSON.parse(row.Products);
             return row;
         });

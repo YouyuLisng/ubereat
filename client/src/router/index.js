@@ -65,33 +65,42 @@ const routes = [
     },
     children: [
       {
-        path: 'shop',
-        component: () => import('../views/Dashboard/DashboardShop.vue'),
-        meta: {
-          title: '商店資訊'
-        }
-      },
-      {
         path: 'product',
-        component: () => import('../views/Dashboard/DashbordProduct.vue'),
+        component: () => import('../views/Dashboard/Dashboard_Product/DashboardMenu.vue'),
         meta: {
           title: '商品資訊'
-        }
+        },
+        children: [
+          {
+            path: 'product-list',
+            component: () => import('../views/Dashboard/Dashboard_Product/DashbordProductList.vue'),
+            meta: {
+              title: '商品概覽'
+            }
+          },
+          {
+            path: 'product-type',
+            component: () => import('../views/Dashboard/Dashboard_Product/DashbordOrder.vue'),
+            meta: {
+              title: '商品類別'
+            }
+          },
+          {
+            path: 'option-group',
+            component: () => import('../views/Dashboard/Dashboard_Product/DashbordOption.vue'),
+            meta: {
+              title: '客製化群組'
+            }
+          },
+        ]
       },
       {
-        path: 'order',
-        component: () => import('../views/Dashboard/DashbordOrder.vue'),
+        path: 'home',
+        component: () => import('../views/Dashboard/Dashboard_Home/DashboardHome.vue'),
         meta: {
-          title: '訂單資訊'
+          title: '編輯商店資訊'
         }
       },
-      {
-        path: 'discount',
-        component: () => import('../views/Dashboard/DashbordDiscount.vue'),
-        meta: {
-          title: '優惠卷'
-        }
-      }
     ]
   }
 ]

@@ -1,10 +1,10 @@
 <template>
-    <div class="container mt-3 border rounded-3">
-        <div class="row bg-gray rounded-3">
-            <div class="col-lg-4 col d-none d-lg-block text-center">
-                <h1 class="fs-5 p-3">設定前台資訊</h1>
-            </div>
-            <div class="col-lg-8 col-12">
+    <div class="container mt-3 rounded-3">
+        <div class="d-none d-lg-block text-center">
+            <h1 class="fs-5 p-3">設定前台資訊</h1>
+        </div>
+        <div class="row rounded-3">
+            <div class="col-lg-12 col-12">
                 <div class="bg-white rounded-3">
                     <div class="row m-3 p-3 gy-3">
                         <h1 class="fs-5 p-3 d-lg-none d-block text-center">設定前台資訊</h1>
@@ -116,12 +116,16 @@ export default {
         })
         //取商店管理員ID並且取得商店資料
         const get_ShopUser = function () {
+            if (!Shop_ManagerID) {
+                return;
+            }
             axios.get(`http://localhost:3000/shop/?Shop_ManagerID=${Shop_ManagerID}`)
                 .then((res) => {
                     console.log(res.data)
                     ShopInfo.value = res.data.data
-                })
-        }
+                });
+        };
+
         let uploadIMG = null
         // 抓取上傳檔案的值
         const uploadfile = function (e) {
@@ -147,7 +151,7 @@ export default {
         }
         const updateShop = function () {
             axios.put('http://localhost:3000/upadte-shop', ShopInfo.value).then((res) => {
-                if(res.data.status === 200) {
+                if (res.data.status === 200) {
                     console.log(res)
                     get_ShopUser()
                 }

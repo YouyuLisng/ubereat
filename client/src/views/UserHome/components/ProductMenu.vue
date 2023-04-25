@@ -3,7 +3,7 @@
         <div class="row-lg d-flex overflow-auto">
             <div class="col-lg menu py-3" v-for="item in Menu" :key="item.ID" style="margin-right: 10px;">
                 <a href="">
-                    <div class="d-flex justify-content-center align-items-center mb-2 img-wrap">
+                    <div class="d-flex justify-content-center align-items-center mb-2 wrap">
                         <img class="img-fuild menu-icon p-2" :src="'/image/' + item.IMGURL" alt="">
                     </div>
                     <div class="menu-text">
@@ -22,11 +22,11 @@
     }
 }
 
-.img-wrap img {
+.wrap img {
     border-radius: 50%;
 }
 
-.menu:hover .img-wrap img {
+.menu:hover .wrap img {
     background-color: #AEF6C7;
 }
 
