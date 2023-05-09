@@ -418,10 +418,10 @@ FROM
     Product_Type
     INNER JOIN Product ON Product_Type.ID = Product.Product_Type_ID
 WHERE 
-    Product.ShopID = ${ShopID}
+    Product.ShopID = ?
     AND Product.is_enabled = 1;
     `;
-    db.exec(sql, [], function (result, fields, err) {
+    db.exec(sql, [ShopID], function (result, fields, err) {
         if (err) {
             return res.json({ status: 400, message: '查詢失敗' });
         }
@@ -434,11 +434,39 @@ app.get('/product', function (req, res) {
     if (!ProductID) {
         return res.status(500).json({ status: 500, message: '請輸入必要參數' })
     }
-    var sql = `SELECT * FROM Product WHERE ProductID = ${ProductID}`
-    db.exec(sql, [], function (result, fields, err) {
+    var sql = `SELECT p.ProductID, p.Product_Name, p.Product_Price, p.Product_Description, p.Product_IMGURL, p.is_enabled, 
+    JSON_ARRAYAGG(
+      JSON_OBJECT(
+        'Option_Group_ID', og.Option_Group_ID,
+        'ShopID', og.ShopID,
+        'Option_Group', og.Option_Group,
+        'Options', (
+          SELECT JSON_ARRAYAGG(
+            JSON_OBJECT(
+              'OptionID', o.OptionID,
+              'OptionName', o.OptionName,
+              'OptionPrice', o.OptionPrice
+            )
+          )
+          FROM Options o
+          WHERE o.Option_Group_ID = og.Option_Group_ID
+        )
+      )
+    ) AS Options
+  FROM Product p
+  LEFT JOIN Product_Option_Group pog ON p.ProductID = pog.ProductID
+  LEFT JOIN Option_Group og ON pog.Option_Group_ID = og.Option_Group_ID
+  WHERE p.ProductID = ?
+  GROUP BY p.ProductID, p.Product_Name, p.Product_Price, p.Product_Description, p.Product_IMGURL, p.is_enabled;  
+`
+    db.exec(sql, [ProductID], function (result, fields, err) {
         if (err) {
             return res.json({ status: 400, message: '查詢失敗' })
         }
+        // 將 Options 欄位轉換為陣列
+        result.forEach((item) => {
+            item.Options = JSON.parse(item.Options)
+        })
         return res.json({ status: 200, message: '查詢成功', data: result })
     })
 })
@@ -534,15 +562,108 @@ app.delete('/del_product-type', function (req, res) {
 // 新增選項option 群組
 app.post('/add-option-group', function (req, res) {
     console.log(req.body)
-    const { Option_Group } = req.body.Option_Group
-    if (!Option_Group) {
+    var Option_Group = req.body.data.Option_Group
+    var ShopID = req.body.ShopID
+    if (!Option_Group || !ShopID) {
         return res.status(500).json({ status: 500, message: '請輸入必要參數' })
     }
+    var sql = `INSERT INTO Option_Group SET Option_Group = ?, ShopID = ?;`
+    db.exec(sql, [Option_Group, ShopID], function (result, fields, err) {
+        if (err) {
+            return res.json({ status: 400, message: '新增失敗' })
+        }
+        return res.json({ status: 200, message: '新增成功', data: result })
+    })
 })
-// 取得選項Option 群組
-app.get('/get-option', function(req, res) {
+// 取得OptionGruop 與 Option 的資訊
+app.get('/get-option-group', function (req, res) {
     console.log(req.query.ShopID)
+    var ShopID = req.query.ShopID
+    var sql = `SELECT 
+      Option_Group.Option_Group_ID,
+      Option_Group.ShopID,
+      Option_Group.Option_Group,
+      COALESCE(
+        JSON_ARRAYAGG(JSON_OBJECT(
+          'OptionID', Options.OptionID, 
+          'OptionName', Options.OptionName, 
+          'OptionPrice', Options.OptionPrice
+        )),
+        JSON_ARRAY()
+      ) AS Options
+    FROM Option_Group
+    LEFT JOIN Options ON Option_Group.Option_Group_ID = Options.Option_Group_ID
+    WHERE Option_Group.ShopID = ?
+    GROUP BY Option_Group.Option_Group_ID
+    ORDER BY Option_Group.Option_Group_ID;`
+    db.exec(sql, [ShopID], function (result, fields, err) {
+        if (err) {
+            console.error(err)
+            return res.json({ status: 400, message: '查詢失敗' })
+        }
+        result.forEach(function (row) {
+            row.Options = JSON.parse(row.Options)
+        })
+        return res.json({ status: 200, message: '查詢成功', data: result })
+    })
 })
+// 新增Option Group的選項
+app.post('/add-option', function (req, res) {
+    console.log(req.body)
+    const { OptionGroupID, OptionName, OptionPrice } = req.body.data
+    var sql = 'INSERT INTO `Options` SET Option_Group_ID = ?, OptionName = ?, OptionPrice = ?;'
+    db.exec(sql, [OptionGroupID, OptionName, OptionPrice], function (result, fields, err) {
+        if (err) {
+            return res.json({ status: 400, message: '新增失敗' })
+        }
+        return res.json({ status: 200, message: '新增成功', data: result })
+    })
+})
+// 新增Product_Group_Options
+app.post('/add-Product-Group-Options', function (req, res) {
+    console.log(req.body)
+    const { ProductID, OptionGroupID } = req.body
+    var sql = `INSERT INTO Product_Option_Group SET ProductID = ?, Option_Group_ID = ?;`
+    db.exec(sql, [ProductID, OptionGroupID], function (result, fields, err) {
+        if (err) {
+            return res.json({ status: 400, message: '新增失敗' })
+        }
+        return res.json({ status: 200, message: '新增成功', data: result })
+    })
+})
+// 刪除Product_Group_Options
+app.delete('/del-Product-Group-Options', function (req, res) {
+    console.log(req.body)
+    try {
+      // 確認參數的完整性和有效性
+      const { ProductID, OptionGroupID } = req.body
+      if (!ProductID || !OptionGroupID) {
+        return res.json({ status: 400, message: '參數不完整或無效' })
+      }
+  
+      // 使用佔位符來避免 SQL 注入攻擊
+      var sql = 'DELETE FROM Product_Option_Group WHERE ProductID = ? AND Option_Group_ID = ?'
+  
+      // 執行 SQL 查詢並檢查是否有錯誤
+      db.exec(sql, [ProductID, OptionGroupID], function (result, fields, err) {
+        if (err) {
+          console.error(err)
+          return res.json({ status: 400, message: '刪除失敗' })
+        }
+  
+        // 檢查是否有刪除任何資料
+        if (result.affectedRows === 0) {
+          return res.json({ status: 400, message: '無法找到指定的資料' })
+        }
+  
+        // 回傳成功訊息
+        return res.json({ status: 200, message: '刪除成功' })
+      })
+    } catch (err) {
+      console.error(err)
+      return res.json({ status: 500, message: '伺服器錯誤' })
+    }
+  })  
 // 加入購物車
 app.post('/add-toCart', function (req, res) {
     console.log(req.body)
@@ -578,6 +699,18 @@ app.post('/add-toCart', function (req, res) {
         }
     })
 })
+// 刪除購物車
+app.delete('/delate-Cart', function (req, res) {
+    console.log(req)
+    var sql = `DELETE FROM Carts WHERE Carts.CartID = ?`
+    db.exec(sql, [], function(result, fields, err) {
+        if (err) {
+            console.error(err)
+            return res.json({ status: 400, message: '刪除失敗' })
+        }
+        return res.json({ status: 200, message: '刪除成功' })
+    })
+})
 //取得購物車資料
 app.get('/get-Cart', function (req, res) {
     var userID = req.query.UserID;
@@ -594,10 +727,36 @@ app.get('/get-Cart', function (req, res) {
     WHERE Carts.UserID = ?
     GROUP BY Shop.ShopID;`
     db.exec(sql, [userID], function (result, fields, err) {
+        if (err) {
+            return res.json({ status: 400, message: '查詢失敗' })
+        }
         var data = result.map(function (row) {
             row.Products = JSON.parse(row.Products);
             return row;
         });
         return res.json({ status: 200, message: '查詢成功', data: data });
     })
+})
+app.get('/', function(req, res) {
+    var sql = `SELECT
+    p.ProductID,
+    p.ShopID,
+    p.Product_Name,
+    p.Product_Type_ID,
+    p.Product_Price,
+    p.Product_Description,
+    p.Product_IMGURL,
+    og.Option_Group_ID,
+    og.ShopID AS Option_ShopID,
+    og.Option_Group,
+    o.OptionID,
+    o.OptionName,
+    o.OptionPrice
+  FROM Product p
+  LEFT JOIN Option_Group og ON p.ShopID = og.ShopID
+  LEFT JOIN Options o ON og.Option_Group_ID = o.Option_Group_ID
+  WHERE p.ProductID = 37;`
+  db.exec(sql, [], function(result, fields, err) {
+    return res.json({ status: 200, message: '查詢成功', data: result });
+  })
 })

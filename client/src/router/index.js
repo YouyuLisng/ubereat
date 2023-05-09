@@ -87,9 +87,16 @@ const routes = [
           },
           {
             path: 'option-group',
-            component: () => import('../views/Dashboard/Dashboard_Product/DashbordOption.vue'),
+            component: () => import('../views/Dashboard/Dashboard_Product/DashbordOptionGroup.vue'),
             meta: {
               title: '客製化群組'
+            }
+          },
+          {
+            path: 'add-option',
+            component: () => import('../views/Dashboard/Dashboard_Product/DashboardOption.vue'),
+            meta: {
+              title: '新增選項'
             }
           },
         ]

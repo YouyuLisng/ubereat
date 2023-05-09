@@ -3,16 +3,16 @@
     <div class="container-fluid mt-3">
         <h3 class="p-3">{{ shopData.Shop_Name }}</h3>
         <div class="row">
-            <div class="col-3">
+            <div class="col-lg-3 d-none d-lg-block">
                 <ul class="side_menu ps-3">
                     <li v-for="item in Product_Type" :key="item.ID" @click="get_click_product(item)">
                         <p>{{ item.Product_Type }}</p>
                     </li>
                 </ul>
             </div>
-            <div class="col-9">
+            <div class="col-lg-9 col-12">
                 <div class="row gy-2 gx-2">
-                    <div class="col-lg-3 col-md-12 position-relative" v-for="item in tempData" :key="item.ProductID">
+                    <div class="col-lg-3 col-md-6 position-relative" v-for="item in tempData" :key="item.ProductID">
                         <div class="shop-img position-relative" @click="toProductInfo(item.ProductID)">
                             <img class="img-fluid" :src="item.Product_IMGURL" alt="Responsive image">
                         </div>
@@ -41,6 +41,7 @@
             </div>
         </div>
     </div>
+    <Footer></Footer>
 </template>
 <style>
 a {
@@ -89,10 +90,11 @@ import { defineComponent } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import Navbar from './components/Navbar.vue';
-
+import Footer from './components/Footer.vue'
 export default defineComponent({
     components: {
-        Navbar
+        Navbar,
+        Footer
     },
     setup() {
         const route = useRoute();

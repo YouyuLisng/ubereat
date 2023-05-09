@@ -42,6 +42,7 @@ export default {
         const model = ref(null)
 
         watch(() => props.product, (newVal) => {
+            console.log('ok')
             tempProduct.value = newVal
         })
         let ShopID = sessionStorage.getItem('Shop_ID')
@@ -62,8 +63,8 @@ export default {
         }
 
         onMounted(() => {
-            get_Product_Type()
             model.value = new Modal(modal.value)
+            get_Product_Type()
         })
         
         return {

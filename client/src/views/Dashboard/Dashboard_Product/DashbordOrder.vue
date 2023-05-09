@@ -5,7 +5,7 @@
                 <h4>類別</h4>
             </div>
             <div>
-                <button type="button" class="btn btn-dark rounded-0" @click="open_addModel(true)">新增類別</button>
+                <button type="button" class="btn btn-dark rounded-0" @click="open_addModel(true, {})">新增類別</button>
             </div>
         </div>
         <div class="row p-3 border-bottom">
@@ -117,7 +117,7 @@ export default defineComponent({
                 tempProduct.value = { ...item }
             }
             isNew.value = New
-            this.$refs.addModal.showModal()
+            addModal.value.showModal()
         }
         const opendelModal = function (item) {
             tempProduct.value = { ...item }

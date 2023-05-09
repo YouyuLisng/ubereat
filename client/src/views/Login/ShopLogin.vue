@@ -46,6 +46,7 @@
 <script>
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
+import { onBeforeRouteUpdate } from 'vue-router'
 import { useRouter } from 'vue-router';
 export default {
     setup() {

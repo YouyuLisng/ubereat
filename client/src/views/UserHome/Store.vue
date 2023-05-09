@@ -8,9 +8,9 @@
         <div class="mt-5">
             <Carousel></Carousel>
         </div>
-        <section class="container mt-5" style="height: 300px;">
-            <div class="row">
-                <div class="col-lg-3 col-md-3 d-none d-lg-block d-md-block">
+        <section class="container mt-5">
+            <div class="row border-bottom border-2">
+                <div class="col-lg-3 d-none d-lg-block">
                     <h2 class="fs-2 pb-3">所有餐廳門市</h2>
                     <div>
                         <div class="dropdown">
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-9 col-md-9 col-12">
+                <div class="col-lg-9 col-12">
                     <div class="row gy-2 gx-2 mb-4">
                         <div class="col-lg-3 col-md-12 position-relative" v-for="item in ShopData" :key="item.ShopID">
                             <router-link class="d-block" :to="`/store/${item.ShopID}`">
@@ -61,12 +61,13 @@
                             </router-link>
                         </div>
                     </div>
-                    <div class="text-center mt-2">
+                    <div class="text-center pb-3 mb-3">
                         <button type="button" class="btn btn-dark">顯示更多餐廳</button>
                     </div>
                 </div>
             </div>
         </section>
+        <Footer></Footer>
     </div>
 </template>
 
@@ -107,22 +108,26 @@ a {
 
 .shop-img {
     overflow: hidden;
-    height: 150px;
+    height: 220px;
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .shop-img img {
+    width: 100%;
     position: absolute;
 }
 
 @media(max-width: 960px) {
     .shop-img img {
-        top: -70%;
+        top: -57%;
     }
 }
 
 @media(max-width: 575px) {
+    .shop-img {
+        height: 170px;
+    }
     .shop-img img {
         top: -30%;
     }
@@ -158,6 +163,7 @@ import Menu from './components/ProductMenu.vue'
 import axios from 'axios';
 import Carousel from './components/CarouseSwiper.vue';
 import Navbar from './components/Navbar.vue';
+import Footer from './components/Footer.vue'
 export default {
     setup() {
         const route = useRouter()
@@ -214,7 +220,8 @@ export default {
     components: {
         Menu,
         Carousel,
-        Navbar
+        Navbar,
+        Footer
     }
 }
 </script>

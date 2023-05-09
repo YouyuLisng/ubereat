@@ -11,13 +11,13 @@
                         <div class="col-6">
                             <label for="exampleFormControlInput1" class="form-label">商品型別</label>
                             <input type="text" class="form-control" id="exampleFormControlInput1"
-                                v-model="tempProduct.Product_Type" placeholder="輸入商品型別">
+                                v-model="tempProduct.Option_Group" placeholder="輸入商品型別">
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-                    <button type="button" @click="$emit('updateType', tempProduct)" class="btn btn-primary">確認</button>
+                    <button type="button" @click="$emit('update-option', tempProduct)" class="btn btn-primary">確認</button>
                 </div>
             </div>
         </div>
@@ -29,7 +29,7 @@ import Modal from 'bootstrap/js/dist/modal'
 import { onMounted, ref, props, watch } from 'vue';
 import axios from 'axios';
 export default {
-    emits: ['updateType'],
+    emits: ['update-option'],
     props: {
         product: {
             type: Object,
@@ -54,10 +54,9 @@ export default {
         }
 
         onMounted(() => {
+            console.log(props)
             model.value = new Modal(modal.value)
-            showModal()
         })
-        
         return {
             props,
             tempProduct,

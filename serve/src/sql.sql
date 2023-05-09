@@ -72,18 +72,23 @@ CREATE TABLE Carts (
   `Product_Price` VARCHAR(255) COMMENT '商品價格',
   FOREIGN KEY(`UserID`) REFERENCES `User`(UserID) ON DELETE SET NULL
 );
-選項選項型態 
-CREATE TABLE Option_Type (
-  `Option_Type_ID` INT PRIMARY KEY AUTO_INCREMENT COMMENT '選項ID',
-  `Option_Type` INT COMMENT '選項型態名稱',
+CREATE TABLE Option_Group (
+  `Option_Group_ID` INT PRIMARY KEY AUTO_INCREMENT COMMENT '選項ID',
+  `ShopID` INT NOT NULL COMMENT '商家ID FK',
+  `Option_Group` VARCHAR(50) NOT NULL COMMENT '選項型態名稱',
+  FOREIGN KEY(`ShopID`) REFERENCES `Shop`(ShopID) ON DELETE SET NULL
 );
-產品選項 
-CREATE TABLE Option (
+
+CREATE TABLE Options (
   `OptionID` INT PRIMARY KEY AUTO_INCREMENT COMMENT '選項ID',
-  `Option_Type_ID` VARCHAR(50) COMMENT 'Option_Type FK ',
-  `ProdcutID` INT COMMENT '商品ID',
-  `OptionName` INT NOT NULL COMMENT '選項名稱',
-  `OptionPrice` VARCHAR(50) COMMENT '選項價格',
-  FOREIGN KEY(`Option_Type_ID`) REFERENCES `Option_Type`(Option_Type_ID) ON DELETE SET NULL
-  FOREIGN KEY(`ProdcutID`) REFERENCES `Product`(ProductID) ON DELETE SET NULL
+  `Option_Group_ID` INT NOT NULL COMMENT 'Option_Group_ID FK ',
+  `OptionName` VARCHAR(50) NOT NULL COMMENT '選項名稱',
+  `OptionPrice` VARCHAR(50) NOT NULL COMMENT '選項價格',
+  FOREIGN KEY(`Option_Group_ID`) REFERENCES `Option_Group`(Option_Group_ID) ON DELETE CASCADE
+);
+
+CREATE TABLE Product_Option_Group (
+  `ProductID` INT PRIMARY KEY AUTO_INCREMENT COMMENT '選項ID',
+  `Option_Group_ID` INT NOT NULL COMMENT 'Option_Group_ID FK ',
+  FOREIGN KEY(`Option_Group_ID`) REFERENCES `Option_Group`(Option_Group_ID) ON DELETE CASCADE
 );

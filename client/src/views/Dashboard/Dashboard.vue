@@ -117,6 +117,7 @@ export default {
                     axios.get(`http://localhost:3000/shop/?Shop_ManagerID=${Shop_ManagerID}`)
                         .then((res) => {
                             sessionStorage.setItem('Shop_ID', res.data.data.ShopID)
+                            route.push('/dashboard/home')
                         })
                 } else {
                     console.log(res.data.message)

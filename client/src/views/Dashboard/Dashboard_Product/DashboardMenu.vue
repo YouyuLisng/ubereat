@@ -4,7 +4,7 @@
             <div>
                 <ul class="product-menu d-flex justify-content-sm-around">
                     <router-link class="nav-link" to="/dashboard/product/product-list">
-                        <li>概覽</li>
+                        <li>產品列表</li>
                     </router-link>
                     <router-link class="nav-link" to="/dashboard/product/product-type">
                         <li>類別</li>

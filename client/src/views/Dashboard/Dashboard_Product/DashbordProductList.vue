@@ -28,13 +28,46 @@
                             </div>
                             <div class="col">
                                 <div class="btn-group">
-                                    <button class="btn btn-outline-dark btn-sm" @click="open_addModel(false, product)">編輯</button>
-                                    <button class="btn btn-outline-danger  btn-sm" @click="opendelModal(product)">刪除</button>
+                                    <button class="btn btn-outline-dark btn-sm"
+                                        @click="open_addModel(false, product)">編輯</button>
+                                    <button class="btn btn-outline-danger  btn-sm"
+                                        @click="opendelModal(product)">刪除</button>
                                 </div>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-outline-dark btn-sm" data-bs-toggle="offcanvas"
+                                    @click="open_OptionGroup(product)" data-bs-target="#offcanvasRight"
+                                    aria-controls="offcanvasRight">客製化群組</button>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasRightLabel">客製化群組</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="row gy-2">
+                <div class="col-12">
+                    <h5>{{ Product_OptionGroup.Product_Name }}</h5>
+                </div>
+                <div class="col-12">
+                    <div class="form-check" v-for="item in OptionGroup" :key="item.Option_Group_ID"
+                        :value="item.Option_Group_ID">
+                        <input class="form-check-input" type="checkbox" :id="'option-group-' + item.Option_Group_ID"
+                            @change="handleOptionGroupChange(item.Option_Group_ID, Product_OptionGroup.ProductID, $event.target.checked)"
+                            :checked="checked_OptionGroup.map(item => item.Option_Group_ID).includes(item.Option_Group_ID)">
+                        <label class="form-check-label" :for="'option-group-' + item.Option_Group_ID">
+                            {{ item.Option_Group }}
+                        </label>
+                    </div>
+
+                </div>
+                <div class="col-12"></div>
             </div>
         </div>
     </div>
@@ -74,9 +107,11 @@
     display: flex;
     justify-content: space-between;
 }
+
 .product-wrap-title:hover {
     box-shadow: 0px 0px 0 0 rgba(39, 39, 36, .3);
 }
+
 .product-wrap-title h3 {
     font-size: 1.4rem;
     line-height: 26px;
@@ -93,7 +128,6 @@
     max-width: 800px;
     margin: 0 auto;
 }
-
 </style>
 <script>
 import { ref, onMounted } from 'vue'
@@ -133,6 +167,7 @@ export default defineComponent({
         };
         onMounted(() => {
             getProduct()
+            getOptionGroup()
         })
         var tempProduct = ref({})
         const open_addModel = function (New, item) {
@@ -180,6 +215,58 @@ export default defineComponent({
                     getProduct()
                 })
         }
+        var Product_OptionGroup = ref({})
+        const open_OptionGroup = function (Product) {
+            Product_OptionGroup.value = Product
+            get_OptionGroup_arr(Product.ProductID)
+        }
+        let OptionGroup = ref([])
+        const getOptionGroup = function () {
+            const api = `http://localhost:3000/get-option-group?ShopID=${ShopID}`
+            axios.get(api).then((res) => {
+                console.log(res.data)
+                OptionGroup.value = res.data.data
+            })
+        }
+        // 取得要打勾的OptionGroup的陣列
+        var checked_OptionGroup = ref([])
+        const get_OptionGroup_arr = function (productId) {
+            axios.get(`http://localhost:3000/product?ProductID=${productId}`)
+                .then((res) => {
+                    checked_OptionGroup.value = res.data.data[0].Options
+                    console.log(checked_OptionGroup.value)
+                })
+        }
+        // 紀錄
+        const handleOptionGroupChange = function (OptionGroupID, ProductID, isChecked) {
+            if (isChecked) {
+                console.log("true")
+                const api = `http://localhost:3000/add-Product-Group-Options`
+                axios.post(api, {
+                    OptionGroupID: OptionGroupID,
+                    ProductID: ProductID
+                }).then((res) => {
+                    console.log(res)
+                })
+                // 如果選項未勾選，則執行新增的行為
+            } else {
+                console.log("false")
+                const api = `http://localhost:3000/del-Product-Group-Options`
+                axios({
+                    method: 'delete',
+                    url: api,
+                    data: {
+                        OptionGroupID: OptionGroupID,
+                        ProductID: ProductID
+                    }
+                }).then((res) => {
+                    console.log(res)
+                }).catch((error) => {
+                    console.log(error)
+                })
+                // 如果選項已勾選，則執行刪除的行為
+            }
+        }
         return {
             Product,
             tempProduct,
@@ -191,7 +278,11 @@ export default defineComponent({
             updateProduct,
             delProduct,
             toggleCollapse,
-
+            Product_OptionGroup,
+            open_OptionGroup,
+            OptionGroup,
+            checked_OptionGroup,
+            handleOptionGroupChange
         }
     }
 })

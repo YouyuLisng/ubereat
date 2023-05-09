@@ -98,6 +98,16 @@ export default {
         }
       })
     }
+    const getnum = function () {
+      console.log('ok')
+      const api = 'https://bi.dtsgroup.com.tw/api/old/ProductV3?qpid=DTS23-SPK056&qpschid=&qpoc=&qmode=S&sbar=0&qkd=&qcoun=&qac=&qtrm=&qsd=&qed=&qkey=&qpri=&clear='
+      axios.get(api).then((res) => {
+        console.log(res.data)
+      })
+    }
+    onMounted(()=> {
+      getnum()
+    })
     return {
       User,
       login
