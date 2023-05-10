@@ -124,7 +124,7 @@
             </div>
             <div class="col-lg-2 col-5 img-fuild d-flex justify-content-center align-items-center">
                 <router-link to="/" style="width: 100%;">
-                    <img class="img-fluid" src="../../../image/logo_kitahora.svg" alt="">
+                    <img style="width: 300px; height: 30px;" class="img-fluid" src="../../../image/logo_kitahora.svg" alt="">
                 </router-link>
             </div>
             <div class="col-lg-1 d-none"></div>

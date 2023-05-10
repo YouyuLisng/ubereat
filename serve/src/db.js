@@ -1,8 +1,9 @@
 const mysql = require('mysql');
+require('dotenv').config();
 
 exports.exec = (sql, data, callback) => {
     const connection = mysql.createConnection({
-        host: 'localhost',
+        host: '127.0.0.1',
         user: 'root',
         password: 'root',
         database: 'Ubereat',

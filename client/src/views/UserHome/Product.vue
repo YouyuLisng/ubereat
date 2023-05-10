@@ -46,7 +46,6 @@
 <style>
 @media(min-width: 1000px) {
     .product_scroll {
-        height: 550px;
         overflow-y: auto;
     }
 }
